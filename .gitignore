@@ -1,0 +1,7 @@
+﻿/.idea/
+/data/
+/res/
+/*.xlsx
+/*.xls
+/*.csv
+/lu_conf.py
