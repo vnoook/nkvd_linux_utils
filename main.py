@@ -3,7 +3,7 @@ import csv
 import lu_conf  # файл с доступами
 
 # переменные
-file_csv = 'hosts-2025-03-12 kernel.csv'
+file_csv = 'hosts-2025-03-14.csv'
 comp_dict = {}
 
 # чтение файла с адресами компов
@@ -18,8 +18,24 @@ config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 for comp in comp_dict:
     print(comp, end=' = ')
     conn = fabric.Connection(host=comp, user=lu_conf.user, connect_kwargs={"password": lu_conf.secret},
-                             config=config, connect_timeout=5)
-    print(conn.is_connected)
+                             config=config, connect_timeout=3)
+    print(dir(conn))
+    for i in dir(conn):
+        if '_' not in i:
+            print(f'... {i} ... {getattr(conn, i, None)}')
+            print('_' * 45)
+    print()
+
+
+
+
+
+
+
+
+
+
+
     # print()
     # conn.close()
 
