@@ -5,14 +5,15 @@ import lu_conf  # файл с доступами
 
 # функция для проверки компа в сети и доступности на нём порта 22
 def check_comp_accessibility(host: str) -> bool:
+    socket.setdefaulttimeout(1)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         host_connect = sock.connect((host, 22))
     except TimeoutError as _err1:
-        print(f'{_err1 = }', end=' = ')
+        # print(f'{_err1 = }', end=' = ')
         return False
     except Exception as _err2:
-        print(f'{_err2 = }', end=' = ')
+        # print(f'{_err2 = }', end=' = ')
         return False
     else:
         # host_info = socket.getaddrinfo(host, 22)
