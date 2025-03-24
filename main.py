@@ -10,15 +10,13 @@ def check_comp_accessibility(host: str) -> bool:
     try:
         host_connect = sock.connect((host, 22))
     except TimeoutError as _err1:
-        # print(f'{_err1 = }', end=' = ')
         return False
     except Exception as _err2:
-        # print(f'{_err2 = }', end=' = ')
         return False
     else:
-        # host_info = socket.getaddrinfo(host, 22)
-        sock.close()
         return True
+    finally:
+        sock.close()
 
 # переменные
 file_csv = 'hosts-2025-03-24.csv'
