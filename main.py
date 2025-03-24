@@ -3,14 +3,21 @@ import fabric
 import socket
 import lu_conf  # файл с доступами
 
-def check_comp_accessibility(computer: str) -> bool:
+# функция для проверки компа в сети и доступности на нём порта 22
+def check_comp_accessibility(host: str) -> bool:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    result = sock.connect_ex((computer, 22))
-    print(result)
-    if result == 0:
-        return True
-    else:
+    try:
+        host_connect = sock.connect((host, 22))
+    except TimeoutError as _err1:
+        print(f'{_err1 = }', end=' = ')
         return False
+    except Exception as _err2:
+        print(f'{_err2 = }', end=' = ')
+        return False
+    else:
+        # host_info = socket.getaddrinfo(host, 22)
+        sock.close()
+        return True
 
 # переменные
 file_csv = 'hosts-2025-03-24.csv'
