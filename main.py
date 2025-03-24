@@ -4,7 +4,7 @@ import socket
 import lu_conf  # файл с доступами
 
 # функция для проверки компа в сети и доступности на нём порта 22
-def check_comp_accessibility(host: str) -> bool:
+def check_host_accessibility(host: str) -> bool:
     socket.setdefaulttimeout(1)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -35,25 +35,18 @@ config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 # цикл подключения ко всем компам из списка в файле
 for comp in comp_dict:
     print(comp, end=' = ')
-    # conn = fabric.Connection(host=comp, user=lu_conf.user, connect_kwargs={"password": lu_conf.secret},
-    #                          config=config, connect_timeout=33)
-    print(check_comp_accessibility(comp))
-    # conn.close()
+    if check_host_accessibility(comp):
+        conn = fabric.Connection(host=comp, user=lu_conf.user, connect_kwargs={"password": lu_conf.secret}, config=config)
+        # comp_dict[comp] = conn.run('uname -r')
+        conn.sudo("systemctl restart cups.service")
+        # print(comp_dict[comp])
+        conn.close()
+    else:
+        print('------')
 
-    # try:
-    #     conn = fabric.Connection(host=comp, user=lu_conf.user, connect_kwargs={"password": lu_conf.secret},
-    #                              config=config, connect_timeout=5)
-    #     print(conn.is_connected.bit_count())
-    # # except TimeoutError as _err:
-    # #     print('какая-то ошибка', _err)
-    # except Exception as _err:
-    #     print('какая-то ошибка', _err)
-    # else:
-    #     print(conn.is_connected.bit_count())
-    #     # comp_dict[comp] = conn.run('uname -r')
-    #     # conn.close()
 
-    # for i in dir(conn):
-    #     if '__doc__' not in i:
-    #         print(f'... {i} ... {getattr(conn, i, None)}')
-    #         print('_' * 45)
+
+# for i in dir(conn):
+#     if '__doc__' not in i:
+#         print(f'... {i} ... {getattr(conn, i, None)}')
+#         print('_' * 45)
