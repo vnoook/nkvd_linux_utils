@@ -21,7 +21,8 @@ def check_host_accessibility(host: str) -> bool:
 
 
 # переменные
-file_csv = 'hosts-2025-03-24.csv'
+# file_csv = 'hosts-2025-03-25.csv'
+file_csv = 'hostskernel-2025-03-25.csv'
 comp_dict = {}
 
 # чтение файла с адресами компов
@@ -42,16 +43,14 @@ for comp in comp_dict:
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             # comp_dict[comp] = conn.run('uname -r')
-            conn.sudo("ls")
-            # conn.run("ls")
+            # comp_dict[comp] = conn.sudo('apt-get update; apt-get dist-upgrade -y; update-kernel -y;')
+            comp_dict[comp] = conn.sudo('sudo -i; apt-get update; apt-get dist-upgrade -y; update-kernel -y;')
         except Exception as _err:
-            print(_err)
-
+            print('--- пароли не подходят ---', _err)
         # print(comp_dict[comp])
         conn.close()
-        print()
     else:
-        print('------')
+        print('--- не в сети или нет доступа по SSH ---')
 
 # for i in dir(conn):
 #     if '__doc__' not in i:
