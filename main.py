@@ -37,10 +37,17 @@ for comp in comp_dict:
     print(comp, end=' = ')
     if check_host_accessibility(comp):
         conn = fabric.Connection(host=comp, user=lu_conf.user, connect_kwargs={"password": lu_conf.secret}, config=config)
-        # comp_dict[comp] = conn.run('uname -r')
-        conn.sudo("systemctl restart cups.service")
+
+        try:
+            # comp_dict[comp] = conn.run('uname -r')
+            conn.sudo("ls")
+            # conn.run("ls")
+        except Exception as _err:
+            print(_err)
+
         # print(comp_dict[comp])
         conn.close()
+        print()
     else:
         print('------')
 
