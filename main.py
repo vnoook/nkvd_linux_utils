@@ -43,8 +43,9 @@ for comp in comp_dict:
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             # comp_dict[comp] = conn.run('uname -r')
+            # comp_dict[comp] = conn.run('apt-get update; apt-get dist-upgrade -y; update-kernel -y;')
             # comp_dict[comp] = conn.sudo('apt-get update; apt-get dist-upgrade -y; update-kernel -y;')
-            comp_dict[comp] = conn.sudo('sudo -i; apt-get update; apt-get dist-upgrade -y; update-kernel -y;')
+            comp_dict[comp] = conn.sudo('update-kernel -y')
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
         # print(comp_dict[comp])
