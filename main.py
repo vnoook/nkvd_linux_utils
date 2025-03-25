@@ -3,6 +3,7 @@ import fabric
 import socket
 import lu_conf  # файл с доступами
 
+
 # функция для проверки компа в сети и доступности на нём порта 22
 def check_host_accessibility(host: str) -> bool:
     socket.setdefaulttimeout(1)
@@ -17,6 +18,7 @@ def check_host_accessibility(host: str) -> bool:
         return True
     finally:
         sock.close()
+
 
 # переменные
 file_csv = 'hosts-2025-03-24.csv'
@@ -36,8 +38,8 @@ config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 for comp in comp_dict:
     print(comp, end=' = ')
     if check_host_accessibility(comp):
-        conn = fabric.Connection(host=comp, user=lu_conf.user, connect_kwargs={"password": lu_conf.secret}, config=config)
-
+        conn = fabric.Connection(host=comp, user=lu_conf.user,
+                                 connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             # comp_dict[comp] = conn.run('uname -r')
             conn.sudo("ls")
@@ -50,8 +52,6 @@ for comp in comp_dict:
         print()
     else:
         print('------')
-
-
 
 # for i in dir(conn):
 #     if '__doc__' not in i:
