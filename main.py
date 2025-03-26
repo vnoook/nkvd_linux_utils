@@ -21,8 +21,7 @@ def check_host_accessibility(host: str) -> bool:
 
 
 # переменные
-# file_csv = 'hosts-2025-03-25.csv'
-file_csv = 'hostskernel-2025-03-25.csv'
+file_csv = 'hosts.csv'
 comp_dict = {}
 
 # чтение файла с адресами компов
