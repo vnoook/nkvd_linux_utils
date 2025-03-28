@@ -49,9 +49,9 @@ for comp in comp_dict:
         try:
             rez = conn.run('uname -r')
             comp_dict[comp] = del_simb(rez.stdout)
-            # conn.sudo('apt-get update')
-            # conn.sudo('apt-get dist-upgrade -y')
-            # conn.sudo('update-kernel -y')
+            conn.sudo('apt-get update')
+            conn.sudo('apt-get dist-upgrade -y')
+            conn.sudo('update-kernel -y')
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
