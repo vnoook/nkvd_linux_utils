@@ -1,3 +1,4 @@
+import re
 import csv
 import fabric
 import socket
@@ -41,14 +42,15 @@ for comp in comp_dict:
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
-            comp_dict[comp] = conn.run('uname -r')
-            comp_dict[comp] = conn.sudo('apt-get update')
-            comp_dict[comp] = conn.sudo('apt-get dist-upgrade -y')
-            comp_dict[comp] = conn.sudo('update-kernel -y')
-            # comp_dict[comp] = conn.sudo('puppet agent -t')
+            ttt = conn.run('uname -r')
+            print(re.sub('[\t\r\n]', '', ttt.stdout))
+            exit()
+            conn.sudo('apt-get update')
+            conn.sudo('apt-get dist-upgrade -y')
+            conn.sudo('update-kernel -y')
+            conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
-        # print(comp_dict[comp])
         conn.close()
     else:
         print('--- не в сети или нет доступа по SSH ---')
@@ -56,6 +58,7 @@ for comp in comp_dict:
     print()
     print('*'*50)
 
+print(comp_dict)
 # for i in dir(conn):
 #     if '__doc__' not in i:
 #         print(f'... {i} ... {getattr(conn, i, None)}')
