@@ -52,6 +52,7 @@ for comp in comp_dict:
             conn.sudo('apt-get update')
             conn.sudo('apt-get dist-upgrade -y')
             conn.sudo('update-kernel -y')
+            # conn.sudo('puppet agent -t')
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
