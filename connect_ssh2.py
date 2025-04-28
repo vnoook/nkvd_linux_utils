@@ -10,7 +10,7 @@ def check_host_accessibility(host: str) -> bool:
     socket.setdefaulttimeout(1)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        host_connect = sock.connect((host, 22))
+        sock.connect((host, 22))
     except TimeoutError as _err1:
         return False
     except Exception as _err2:
@@ -22,7 +22,7 @@ def check_host_accessibility(host: str) -> bool:
 
 
 # функция удаления непечатаемых символов
-def del_simb(str_in: str) -> str:
+def del_simbols(str_in: str) -> str:
     return re.sub('[\t\r\n]', '', str_in)
 
 
@@ -48,19 +48,24 @@ for comp in comp_dict:
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             rez = conn.run('uname -r')
-            comp_dict[comp] = del_simb(rez.stdout)
-            conn.sudo('apt-get update')
-            conn.sudo('apt-get dist-upgrade -y')
-            conn.sudo('update-kernel -y')
+            comp_dict[comp] = del_simbols(rez.stdout)
+            # conn.sudo('apt-get update')
+            # conn.sudo('apt-get dist-upgrade -y')
+            # conn.sudo('update-kernel -y')
+
             # conn.sudo('puppet agent -t')
+
+            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru" "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"')
+
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
-            comp_dict[comp] = del_simb(str(_err))
+            comp_dict[comp] = del_simbols(str(_err))
         conn.close()
     else:
         print('--- не в сети или нет доступа по SSH ---')
-        comp_dict[comp] = del_simb('--- не в сети или нет доступа по SSH ---')
+        comp_dict[comp] = del_simbols('--- не в сети или нет доступа по SSH ---')
 
     print()
     print('*'*50)
