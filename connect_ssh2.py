@@ -47,16 +47,22 @@ for comp in comp_dict:
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
+            # 1
             rez = conn.run('uname -r')
             comp_dict[comp] = del_simbols(rez.stdout)
-            # conn.sudo('apt-get update')
-            # conn.sudo('apt-get dist-upgrade -y')
-            # conn.sudo('update-kernel -y')
-
+            # 2
+            conn.sudo('apt-get update')
+            conn.sudo('apt-get dist-upgrade -y')
+            conn.sudo('update-kernel -y')
+            # 3
             # conn.sudo('puppet agent -t')
-
-            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru" "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"')
+            # 4
+            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                      r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                      r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
+                      r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
+                      r' "https://*.gov.ru"')
 
             conn.close()
         except Exception as _err:
