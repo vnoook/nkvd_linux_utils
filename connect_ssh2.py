@@ -57,12 +57,12 @@ for comp in comp_dict:
             # 3
             # conn.sudo('puppet agent -t')
             # 4
-            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                      r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                      r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
-                      r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
-                      r' "https://*.gov.ru"')
+            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+            #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+            #           r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
+            #           r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
+            #           r' "https://*.gov.ru"')
 
             conn.close()
         except Exception as _err:
