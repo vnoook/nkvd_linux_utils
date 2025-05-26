@@ -22,25 +22,7 @@ def check_host_accessibility(host: str) -> bool:
 
 # функция для получения ip-адреса по имени компа
 def get_host_ip(host: str) -> str:
-    # host = '006-004-01-003.arm.loc'
-    host = '006-004-01-003'
-    print()
-    print()
-    print(host)
-    host_ip = socket.gethostbyname(host)
-    print(host_ip)
-
-    # socket.setdefaulttimeout(1)
-    # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # print(host)
-    # print(socket.gethostbyname(host))
-    # sock.close()
-
-    # host_name = socket.gethostname()
-    # host_ip = socket.gethostbyname(host_name)
-    # print("Hostname : ", host_name)
-    # print("IP : ", host_ip)
-
+    host_ip = socket.getgethostbyname(host)
     return host_ip
 
 
@@ -67,8 +49,8 @@ config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 for comp in comp_dict:
     print(comp, end=' = ')
 
-    get_host_ip(comp)
-    exit()
+    # get_host_ip(comp)
+    # exit()
 
     if check_host_accessibility(comp):
         conn = fabric.Connection(host=comp, user=lu_conf.user,
