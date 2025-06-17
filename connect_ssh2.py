@@ -20,9 +20,11 @@ def check_host_accessibility(host: str) -> bool:
     finally:
         sock.close()
 
+
 # функция для получения ip-адреса по имени компа
 def get_host_ip(host: str) -> str:
-    host_ip = socket.getgethostbyname(host)
+    host_ip = socket.gethostbyname(host)
+    socket.close()
     return host_ip
 
 
@@ -49,7 +51,7 @@ config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 for comp in comp_dict:
     print(comp, end=' = ')
 
-    # get_host_ip(comp)
+    # print(get_host_ip(comp))
     # exit()
 
     if check_host_accessibility(comp):
@@ -66,12 +68,15 @@ for comp in comp_dict:
             # 3
             # conn.sudo('puppet agent -t')
             # 4
-            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-            #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-            #           r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
-            #           r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
-            #           r' "https://*.gov.ru"')
+            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                      r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                      r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
+                      r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
+                      r' "https://*.gov.ru"')
+            # 5
+            # conn.run(r'bash <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)')
+            # conn.sudo(r'bash <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)')
 
             conn.close()
         except Exception as _err:
