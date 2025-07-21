@@ -23,6 +23,10 @@ def check_host_accessibility(host: str) -> bool:
 
 # функция для получения ip-адреса по имени компа
 def get_host_ip(host: str) -> str:
+    # print(socket.gethostbyname(host))
+    # print(socket.gethostbyname(host))
+
+    host_ip = socket.gethostbyname('ad1')
     host_ip = socket.gethostbyname(host)
     socket.close()
     return host_ip
@@ -80,6 +84,8 @@ for comp in comp_dict:
             # 6
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
+            # 7
+            #
 
             conn.close()
         except Exception as _err:
