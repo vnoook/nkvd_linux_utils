@@ -23,12 +23,14 @@ def check_host_accessibility(host: str) -> bool:
 
 # функция для получения ip-адреса по имени компа
 def get_host_ip(host: str) -> str:
-    # print(socket.gethostbyname(host))
-    # print(socket.gethostbyname(host))
-
-    host_ip = socket.gethostbyname('ad1')
-    host_ip = socket.gethostbyname(host)
-    socket.close()
+    try:
+        # host_ip = (socket.getaddrinfo(host, 8000))
+        # print(host_ip[0][4][0])
+        host_ip = socket.gethostbyname(host)
+        # socket.close()
+    except Exception as _err3:
+        # print('--- не могу найти комп ---', _err3)
+        host_ip = _err3
     return host_ip
 
 
@@ -52,11 +54,9 @@ with open(file_csv, encoding='cp1251', newline='') as csvfile:
 config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 
 # цикл подключения ко всем компам из списка в файле
-for comp in comp_dict:
-    print(comp, end=' = ')
-
-    # print(get_host_ip(comp))
-    # exit()
+for comp in comp_dict.keys():
+    print(comp, ',', get_host_ip(comp), end=' = ')
+    # print(get_host_ip(comp), end=' = ')
 
     if check_host_accessibility(comp):
         conn = fabric.Connection(host=comp, user=lu_conf.user,
