@@ -64,13 +64,14 @@ for comp in comp_dict.keys():
         try:
             # 1
             rez = conn.run('uname -r')
+            # rez = conn.sudo('uname -r')
             comp_dict[comp] = del_simbols(rez.stdout)
             # 2
-            # conn.sudo('apt-get update')
-            # conn.sudo('apt-get dist-upgrade -y')
-            # conn.sudo('update-kernel -y')
+            conn.sudo('apt-get update')
+            conn.sudo('apt-get dist-upgrade -y')
+            conn.sudo('update-kernel -y')
             # 3
-            # conn.sudo('puppet agent -t', warn=True)
+            # res1 = conn.sudo('puppet agent -t', warn=True)
             # 4
             # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
             # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
@@ -85,8 +86,8 @@ for comp in comp_dict.keys():
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
             # 7
+            conn.sudo('remove-old-kernels -y')
             #
-
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
