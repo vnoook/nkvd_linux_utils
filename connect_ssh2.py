@@ -86,7 +86,7 @@ for comp in comp_dict.keys():
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
             # 7
-            conn.sudo('remove-old-kernels -y')
+            # conn.sudo('remove-old-kernels -y')
             #
             conn.close()
         except Exception as _err:
