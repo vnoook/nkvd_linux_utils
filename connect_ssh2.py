@@ -67,9 +67,9 @@ for comp in comp_dict.keys():
             # rez = conn.sudo('uname -r')
             comp_dict[comp] = del_simbols(rez.stdout)
             # 2
-            conn.sudo('apt-get update')
-            conn.sudo('apt-get dist-upgrade -y')
-            conn.sudo('update-kernel -y')
+            # conn.sudo('apt-get update')
+            # conn.sudo('apt-get dist-upgrade -y')
+            # conn.sudo('update-kernel -y')
             # 3
             # res1 = conn.sudo('puppet agent -t', warn=True)
             # 4
@@ -87,7 +87,8 @@ for comp in comp_dict.keys():
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
             # 7
             # conn.sudo('remove-old-kernels -y')
-            #
+            # 8
+            rez_usb_devices = conn.run('lsusb')
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
@@ -101,7 +102,7 @@ for comp in comp_dict.keys():
     print('*'*50)
 
 for key, value in comp_dict.items():
-    print(f'{key};{value}')
+    print(f'{key},{value}')
 
 # for i in dir(conn):
 #     if '__doc__' not in i:
