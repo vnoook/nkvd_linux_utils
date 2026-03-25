@@ -67,18 +67,18 @@ for comp in comp_dict.keys():
             # rez = conn.sudo('uname -r')
             comp_dict[comp] = del_simbols(rez.stdout)
             # 2
-            # conn.sudo('apt-get update')
-            # conn.sudo('apt-get dist-upgrade -y')
-            # conn.sudo('update-kernel -y')
+            conn.sudo('apt-get update')
+            conn.sudo('apt-get dist-upgrade -y')
+            conn.sudo('update-kernel -y')
             # 3
             # res1 = conn.sudo('puppet agent -t', warn=True)
             # 4
-            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-            #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-            #           r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
-            #           r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
-            #           r' "https://*.gov.ru"')
+            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                      r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                      r' "http://*.cryptopro.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
+                      r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
+                      r' "https://*.gov.ru"')
             # 5
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
@@ -86,9 +86,11 @@ for comp in comp_dict.keys():
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
             # 7
-            # conn.sudo('remove-old-kernels -y')
+            conn.sudo('remove-old-kernels -y')
             # 8
-            rez_usb_devices = conn.run('lsusb')
+            # rez_usb_devices = conn.run('lsusb')
+            # 9
+            # rez_usb_devices = conn.run('/etc/NX/nxnode --version')
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
