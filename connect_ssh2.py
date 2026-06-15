@@ -76,9 +76,9 @@ for comp in comp_dict.keys():
             conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
             conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
                       r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                      r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
-                      r' "http://10.101.39.10" "https://10.101.39.10" "https://lk.zakupki.gov.ru"'
-                      r' "https://*.gov.ru"')
+                      r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                      r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                      r' "http://10.101.39.10" "https://10.101.39.10"')
             # 5
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
@@ -91,6 +91,9 @@ for comp in comp_dict.keys():
             # rez_usb_devices = conn.run('lsusb')
             # 9
             # rez_usb_devices = conn.run('/etc/NX/nxnode --version')
+            # 10
+            # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+
             conn.close()
         except Exception as _err:
             print('--- пароли не подходят ---', _err)
