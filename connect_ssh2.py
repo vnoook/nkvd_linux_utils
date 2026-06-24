@@ -63,22 +63,22 @@ for comp in comp_dict.keys():
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             # 1
-            rez = conn.run('uname -r')
+            # rez = conn.run('uname -r')
             # rez = conn.sudo('uname -r')
-            comp_dict[comp] = del_simbols(rez.stdout)
+            # comp_dict[comp] = del_simbols(rez.stdout)
             # 2
-            conn.sudo('apt-get update')
-            conn.sudo('apt-get dist-upgrade -y')
-            conn.sudo('update-kernel -y')
+            # conn.sudo('apt-get update')
+            # conn.sudo('apt-get dist-upgrade -y')
+            # conn.sudo('update-kernel -y')
             # 3
             # res1 = conn.sudo('puppet agent -t', warn=True)
             # 4
-            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-            conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                      r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                      r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                      r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                      r' "http://10.101.39.10" "https://10.101.39.10"')
+            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+            # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+            #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+            #           r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+            #           r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+            #           r' "http://10.101.39.10" "https://10.101.39.10"')
             # 5
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
@@ -86,7 +86,7 @@ for comp in comp_dict.keys():
             # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
             # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
             # 7
-            conn.sudo('remove-old-kernels -y')
+            # conn.sudo('remove-old-kernels -y')
             # 8
             # rez_usb_devices = conn.run('lsusb')
             # 9
@@ -103,10 +103,33 @@ for comp in comp_dict.keys():
             # gsettings set org.gnome.system.proxy ignore-hosts "['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10']"
             # conn.sudo('gsettings set org.gnome.system.proxy ignore-hosts "[\'localhost\', \'127.0.0.0/8\', \'::1\', \'portal\', \'*.egisznso.ru\', \'10.101.39.10\']"')
             # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+            # 12
+            result = conn.run("ping -c 1 006-005-01-014.arm.loc")
+            print()
+            # print(f"stdout: {result.stdout = }")
+            print(f"stderr: {result.stderr = }")
+            print(f"stderr: {result.command = }")
+            print(f"stderr: {result.disowned = }")
+            print(f"stderr: {result.encoding = }")
+            print(f"stderr: {result.env = }")
+            print(f"stderr: {result.exited = }")
+            print(f"stderr: {result.failed = }")
+            print(f"stderr: {result.hide = }")
+            print(f"stderr: {result.ok = }")
+            print(f"stderr: {result.pid = }")
+            print(f"stderr: {result.pty = }")
+            print(f"stderr: {result.return_code = }")
+            print(f"stderr: {result.shell = }")
+            if result.failed:
+                print(f"Команда завершилась с ошибкой: {result.stderr}")
+            # else:
+            #     print(f"Успешно выполнено. Вывод:\n{result.stdout}")
 
             conn.close()
+            exit()
+
         except Exception as _err:
-            print('--- пароли не подходят ---', _err)
+            print('--- пароли не подходят --- ', _err)
             comp_dict[comp] = del_simbols(str(_err))
         conn.close()
     else:
