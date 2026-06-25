@@ -61,7 +61,7 @@ for comp in comp_dict.keys():
     if check_host_accessibility(comp):
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
-        try:
+        # try:
             # 1
             # rez = conn.run('uname -r')
             # rez = conn.sudo('uname -r')
@@ -103,35 +103,35 @@ for comp in comp_dict.keys():
             # gsettings set org.gnome.system.proxy ignore-hosts "['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10']"
             # conn.sudo('gsettings set org.gnome.system.proxy ignore-hosts "[\'localhost\', \'127.0.0.0/8\', \'::1\', \'portal\', \'*.egisznso.ru\', \'10.101.39.10\']"')
             # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
-            # 12
-            result = conn.run("ping -c 1 006-005-01-014.arm.loc")
-            print()
-            # print(f"stdout: {result.stdout = }")
-            print(f"stderr: {result.stderr = }")
-            print(f"stderr: {result.command = }")
-            print(f"stderr: {result.disowned = }")
-            print(f"stderr: {result.encoding = }")
-            print(f"stderr: {result.env = }")
-            print(f"stderr: {result.exited = }")
-            print(f"stderr: {result.failed = }")
-            print(f"stderr: {result.hide = }")
-            print(f"stderr: {result.ok = }")
-            print(f"stderr: {result.pid = }")
-            print(f"stderr: {result.pty = }")
-            print(f"stderr: {result.return_code = }")
-            print(f"stderr: {result.shell = }")
-            if result.failed:
-                print(f"Команда завершилась с ошибкой: {result.stderr}")
-            # else:
-            #     print(f"Успешно выполнено. Вывод:\n{result.stdout}")
-
-            conn.close()
-            exit()
-
-        except Exception as _err:
-            print('--- пароли не подходят --- ', _err)
-            comp_dict[comp] = del_simbols(str(_err))
+        # 12
+        print()
+        print('*'*46)
+        result = conn.run("ping -c 3 006-000-99-999.arm.loc", hide=False)
+        # print(f"stdout: {result.stdout = }")
+        print(f"stderr: {result.stderr = }")
+        print(f"stderr: {result.command = }")
+        print(f"stderr: {result.disowned = }")
+        print(f"stderr: {result.encoding = }")
+        print(f"stderr: {result.env = }")
+        print(f"stderr: {result.exited = }")
+        print(f"stderr: {result.failed = }")
+        print(f"stderr: {result.hide = }")
+        print(f"stderr: {result.ok = }")
+        print(f"stderr: {result.pid = }")
+        print(f"stderr: {result.pty = }")
+        print(f"stderr: {result.return_code = }")
+        print(f"stderr: {result.shell = }")
+        if result.failed:
+            print(f"Команда завершилась с ошибкой: {result.stderr}")
+        # else:
+        #     print(f"Успешно выполнено. Вывод:\n{result.stdout}")
         conn.close()
+        exit()
+
+        # except Exception as _err:
+        #     print('--- пароли не подходят --- ', _err)
+        #     comp_dict[comp] = del_simbols(str(_err))
+        # conn.close()
     else:
         print('--- не в сети или нет доступа по SSH ---')
         comp_dict[comp] = del_simbols('--- не в сети или нет доступа по SSH ---')
