@@ -43,6 +43,7 @@ def del_simbols(str_in: str) -> str:
 def run() -> None:
     # переменные
     file_csv = 'hosts.csv'
+    comp_list = []
     comp_dict = {}
 
     # чтение файла с адресами компов
@@ -50,14 +51,16 @@ def run() -> None:
         row_csv_content = csv.reader(csvfile, delimiter=',')
         next(row_csv_content)  # пропускаю первую строку
         for row in row_csv_content:
-            comp_dict[row[0]] = ''
+            comp_list.append(row[0])
 
     # общий конфиг для всех соединений
     config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
 
+    print('*' * 50)
+
     # цикл подключения ко всем компам из списка в файле
-    for comp in comp_dict.keys():
-        print(comp, ',', get_host_ip(comp), end=' = ')
+    for comp in comp_list:
+        print(comp+',', get_host_ip(comp), end=', ')
         # print(get_host_ip(comp), end=' = ')
 
         if check_host_accessibility(comp):
@@ -143,6 +146,10 @@ def run() -> None:
 
     for key, value in comp_dict.items():
         print(f'{key},{value}')
+
+    print('*' * 50)
+    for key in comp_dict.items():
+        print(key)
 
 
 if __name__ == '__main__':
