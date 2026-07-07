@@ -107,7 +107,8 @@ def run() -> None:
                 # 9
                 # rez_usb_devices = conn.run('/etc/NX/nxnode --version')
                 # 10
-                # res1 = conn.sudo('puppet agent -t', warn=True)
+                conn.sudo('puppet agent -t', warn=True, env={'LANG': 'ru_RU.UTF-8', 'LC_ALL': 'ru_RU.UTF-8'})
+                # res1 = conn.sudo('puppet agent -t', warn=True, env={'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'})
                 # 11
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 # 12
