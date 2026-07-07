@@ -77,19 +77,19 @@ def run() -> None:
                 rez = conn.sudo('uname -r')    # rez = conn.run('uname -r')
                 comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
-                conn.sudo('apt-get update')
-                conn.sudo('apt-get dist-upgrade -y')
+                # conn.sudo('apt-get update')
+                # conn.sudo('apt-get dist-upgrade -y')
                 # 3
-                conn.sudo('update-kernel -y')
+                # conn.sudo('update-kernel -y')
                 # 4
-                conn.sudo('remove-old-kernels -y')
+                # conn.sudo('remove-old-kernels -y')
                 # 5
-                conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-                conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                          r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                          r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                          r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                          r' "http://10.101.39.10" "https://10.101.39.10"')
+                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                #           r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                #           r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                #           r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6 -------------
                 # rez_usb_devices = conn.run('lsusb')
                 # 7
@@ -141,12 +141,15 @@ def run() -> None:
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
-                comp_dict[comp] = del_simbols(str(_err))
+                # comp_dict[comp] = del_simbols(str(_err))
+                comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(str(_err))))
             conn.close()
         else:
             error_msg = '--- не в сети или нет доступа по SSH ---'
             print(error_msg)
             comp_dict[comp] = del_simbols(error_msg)
+            # comp_dict[comp] = str(get_host_ip(comp)) + ', ' + del_simbols(error_msg)
+            # comp_dict[comp] = ', '.join((str(get_host_ip(comp)), del_simbols(error_msg)))
 
         print()
         print('*'*50)
