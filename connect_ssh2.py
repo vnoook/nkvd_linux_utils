@@ -24,13 +24,9 @@ def check_host_accessibility(host: str) -> bool:
 # функция для получения ip-адреса по имени компа
 def get_host_ip(host: str) -> str:
     try:
-        # host_ip = (socket.getaddrinfo(host, 8000))
-        # print(host_ip[0][4][0])
         host_ip = socket.gethostbyname(host)
-        # socket.close()
     except Exception as _err3:
-        # print('--- не могу найти комп ---', _err3)
-        host_ip = _err3
+        host_ip = str(_err3)
     return host_ip
 
 
