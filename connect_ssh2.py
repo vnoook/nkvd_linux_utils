@@ -2,6 +2,7 @@ import re
 import csv
 import fabric
 import socket
+import ipaddress
 import lu_conf  # файл с доступами
 
 
@@ -28,6 +29,15 @@ def get_host_ip(host: str) -> str:
     except Exception as _err3:
         host_ip = str(_err3)
     return host_ip
+
+
+# функция определения ip адрес это или нет
+def is_ip_address(str_in: str) -> bool:
+    try:
+        ipaddress.ip_address(str_in)
+        return True
+    except ValueError:
+        return False
 
 
 # функция удаления непечатаемых символов
@@ -143,9 +153,10 @@ def run() -> None:
         else:
             error_msg = '--- не в сети или нет доступа по SSH ---'
             print(error_msg)
-            comp_dict[comp] = del_simbols(error_msg)
-            # comp_dict[comp] = str(get_host_ip(comp)) + ', ' + del_simbols(error_msg)
-            # comp_dict[comp] = ', '.join((str(get_host_ip(comp)), del_simbols(error_msg)))
+            if is_ip_address(get_host_ip(comp)):
+                comp_dict[comp] = ', '.join((str(get_host_ip(comp)), del_simbols(error_msg)))
+            else:
+                comp_dict[comp] = del_simbols(error_msg)
 
         print()
         print('*'*50)
