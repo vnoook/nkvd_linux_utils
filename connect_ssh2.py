@@ -147,7 +147,6 @@ def run() -> None:
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
-                # comp_dict[comp] = del_simbols(str(_err))
                 comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(str(_err))))
             conn.close()
         else:
@@ -157,7 +156,6 @@ def run() -> None:
                 comp_dict[comp] = ', '.join((str(get_host_ip(comp)), del_simbols(error_msg)))
             else:
                 comp_dict[comp] = del_simbols(error_msg)
-
         print()
         print('*'*50)
 
