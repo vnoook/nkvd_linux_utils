@@ -74,10 +74,9 @@ def run() -> None:
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
-                rez = conn.run('uname -r')
-                # comp_dict[comp] = get_host_ip(comp) + comp_dict[comp] + del_simbols(rez.stdout)
-                print(f'{comp_dict[comp] = } ... {del_simbols(rez.stdout) = }')
-                # comp_dict[comp] = str(comp_dict[comp]) + del_simbols(rez.stdout)
+                # сначала было так - rez = conn.run('uname -r')
+                rez = conn.sudo('uname -r')
+                comp_dict[comp] = get_host_ip(comp) + ', ' + del_simbols(rez.stdout)
                 # 2
                 conn.sudo('apt-get update')
                 conn.sudo('apt-get dist-upgrade -y')
