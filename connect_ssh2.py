@@ -39,19 +39,26 @@ def del_simbols(str_in: str) -> str:
     return re.sub('[\t\r\n]', '', str_in)
 
 
-# основная функция запуска приложения
-def run() -> None:
-    # переменные
-    file_csv = 'hosts.csv'
-    comp_list = []
-    comp_dict = {}
-
+# функция чтения файла и получения из него списка имён компов
+def read_file_csv(file_csv) -> list:
+    compname_list = []
     # чтение файла с адресами компов
     with open(file_csv, encoding='cp1251', newline='') as csvfile:
         row_csv_content = csv.reader(csvfile, delimiter=',')
         next(row_csv_content)  # пропускаю первую строку
         for row in row_csv_content:
-            comp_list.append(row[0])
+            compname_list.append(row[0])
+    return compname_list
+
+
+# основная функция запуска приложения
+def run() -> None:
+    # переменные
+    file_csv = 'hosts.csv'
+    comp_dict = {}
+
+    # чтение файла
+    comp_list = read_file_csv(file_csv)
 
     # общий конфиг для всех соединений
     config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
