@@ -41,14 +41,14 @@ def del_simbols(str_in: str) -> str:
 
 # функция чтения файла и получения из него списка имён компов
 def read_file_csv(file_csv) -> list:
-    compname_list = []
+    comp_name_list = []
     # чтение файла с адресами компов
     with open(file_csv, encoding='cp1251', newline='') as csvfile:
         row_csv_content = csv.reader(csvfile, delimiter=',')
         next(row_csv_content)  # пропускаю первую строку
         for row in row_csv_content:
-            compname_list.append(row[0])
-    return compname_list
+            comp_name_list.append(row[0])
+    return comp_name_list
 
 
 # основная функция запуска приложения
@@ -68,16 +68,16 @@ def run() -> None:
     # цикл подключения ко всем компам из списка в файле
     for comp in comp_list:
         print(comp+',', get_host_ip(comp), end=', ')
-        # print(get_host_ip(comp), end=' = ')
 
         if check_host_accessibility(comp):
             conn = fabric.Connection(host=comp, user=lu_conf.user,
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
-                # rez = conn.run('uname -r')
-                rez = conn.sudo('uname -r')
-                comp_dict[comp] = del_simbols(rez.stdout)
+                rez = conn.run('uname -r')
+                # comp_dict[comp] = get_host_ip(comp) + comp_dict[comp] + del_simbols(rez.stdout)
+                print(f'{comp_dict[comp] = } ... {del_simbols(rez.stdout) = }')
+                # comp_dict[comp] = str(comp_dict[comp]) + del_simbols(rez.stdout)
                 # 2
                 conn.sudo('apt-get update')
                 conn.sudo('apt-get dist-upgrade -y')
@@ -85,12 +85,12 @@ def run() -> None:
                 # 3
                 # res1 = conn.sudo('puppet agent -t', warn=True)
                 # 4
-                conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-                conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                          r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                          r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                          r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                          r' "http://10.101.39.10" "https://10.101.39.10"')
+                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                #           r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                #           r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                #           r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 5
                 # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
                 # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
@@ -145,18 +145,15 @@ def run() -> None:
                 comp_dict[comp] = del_simbols(str(_err))
             conn.close()
         else:
-            print('--- не в сети или нет доступа по SSH ---')
-            comp_dict[comp] = del_simbols('--- не в сети или нет доступа по SSH ---')
+            error_msg = '--- не в сети или нет доступа по SSH ---'
+            print(error_msg)
+            comp_dict[comp] = del_simbols(error_msg)
 
         print()
         print('*'*50)
 
     for key, value in comp_dict.items():
         print(f'{key},{value}')
-
-    print('*' * 50)
-    for key in comp_dict.items():
-        print(key)
 
 
 if __name__ == '__main__':
