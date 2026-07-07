@@ -74,37 +74,37 @@ def run() -> None:
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
-                rez = conn.sudo('uname -r')                # rez = conn.run('uname -r')
-                # comp_dict[comp] = get_host_ip(comp) + ', ' + del_simbols(rez.stdout)
+                rez = conn.sudo('uname -r')    # rez = conn.run('uname -r')
                 comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
                 conn.sudo('apt-get update')
                 conn.sudo('apt-get dist-upgrade -y')
+                # 3
                 conn.sudo('update-kernel -y')
                 # 4
-                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                #           r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                #           r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                #           r' "http://10.101.39.10" "https://10.101.39.10"')
-                # 7
                 conn.sudo('remove-old-kernels -y')
-                # 8
-                # rez_usb_devices = conn.run('lsusb')
                 # 5
+                conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
+                conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                          r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                          r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                          r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                          r' "http://10.101.39.10" "https://10.101.39.10"')
+                # 6 -------------
+                # rez_usb_devices = conn.run('lsusb')
+                # 7
                 # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
                 # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
-                # 6
+                # 8
                 # conn.run(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
                 # conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)')
                 # 9
                 # rez_usb_devices = conn.run('/etc/NX/nxnode --version')
-                # 3
-                # res1 = conn.sudo('puppet agent -t', warn=True)
                 # 10
-                # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                # res1 = conn.sudo('puppet agent -t', warn=True)
                 # 11
+                # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                # 12
                 # echo $DISPLAY
                 # conn.sudo('echo $DISPLAY')
                 # export DISPLAY=:0
@@ -116,7 +116,7 @@ def run() -> None:
                 # conn.sudo('gsettings set org.gnome.system.proxy ignore-hosts "[\'localhost\', \'127.0.0.0/8\','
                 #           '\'::1\',\'portal\', \'*.egisznso.ru\', \'10.101.39.10\']"')
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
-                # 12
+                # 13
                 # print()
                 # print('*'*46)
                 # result = conn.run("ping -c 3 006-000-99-999.arm.loc", hide=False)
