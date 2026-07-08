@@ -67,8 +67,11 @@ def run() -> None:
     comp_list = read_file_csv(file_csv)
 
     # общий конфиг для всех соединений
-    config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
-
+    # config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
+    # utf8en_env = {'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'}
+    # config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8en_env}, 'run': {'env': utf8en_env}})
+    utf8ru_env = {'LANG': 'ru_RU.UTF-8', 'LC_ALL': 'ru_RU.UTF-8'}
+    config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8ru_env}, 'run': {'env': utf8ru_env}})
     print('*' * 50)
 
     # цикл подключения ко всем компам из списка в файле
@@ -108,7 +111,7 @@ def run() -> None:
                 # rez_usb_devices = conn.run('/etc/NX/nxnode --version')
                 # 10
                 conn.sudo('puppet agent -t', warn=True, env={'LANG': 'ru_RU.UTF-8', 'LC_ALL': 'ru_RU.UTF-8'})
-                # res1 = conn.sudo('puppet agent -t', warn=True, env={'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'})
+                # conn.sudo('puppet agent -t', warn=True, env={'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'})
                 # 11
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 # 12
