@@ -69,9 +69,11 @@ def run() -> None:
     # общий конфиг для всех соединений
     # config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
     # utf8en_env = {'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'}
-    # config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8en_env}, 'run': {'env': utf8en_env}})
+    # config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8en_env},
+    #                                   'run': {'env': utf8en_env}})
     utf8ru_env = {'LANG': 'ru_RU.UTF-8', 'LC_ALL': 'ru_RU.UTF-8'}
-    config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8ru_env}, 'run': {'env': utf8ru_env}})
+    config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8ru_env},
+                                      'run': {'env': utf8ru_env}})
     print('*' * 50)
 
     # цикл подключения ко всем компам из списка в файле
