@@ -45,6 +45,13 @@ def del_simbols(str_in: str) -> str:
     return re.sub('[\t\r\n]', '', str_in)
 
 
+# декодирование нечитаемой информации из выводов в читаемую
+def decode_output(in_result) -> str:
+    correct_out_resultoutput = in_result.stdout.encode('cp1251').decode('utf-8')
+    # print(correct_output)
+    return out_result
+
+
 # функция чтения файла и получения из него списка имён компов
 def read_file_csv(file_csv) -> list:
     comp_name_list = []
