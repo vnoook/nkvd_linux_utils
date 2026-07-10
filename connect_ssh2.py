@@ -47,7 +47,7 @@ def del_simbols(str_in: str) -> str:
 
 # декодирование нечитаемой информации из выводов в читаемую
 def decode_output(in_result) -> str:
-    correct_out_resultoutput = in_result.stdout.encode('cp1251').decode('utf-8')
+    out_result = in_result.stdout.encode('cp1251').decode('utf-8')
     # print(correct_output)
     return out_result
 
@@ -109,17 +109,20 @@ def run() -> None:
                 #           r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
                 #           r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6 -------------
-                # rez_usb_devices = conn.run('lsusb')
+                # conn.run('lsusb')
                 # 7
-                conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True)
+                # res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
+                #                 warn=True, hide=True)
+                # print(decode_output(res7))
                 # 8
-                conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True)
+                # res8 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)',
+                #                 warn=True, hide=True)
+                # print(decode_output(res8))
                 # 9
-                # rez_usb_devices = conn.run('/etc/NX/nxnode --version')
+                # conn.run('/etc/NX/nxnode --version')
                 # 10
-                conn.sudo('puppet agent -t', warn=True)
-                # ***conn.sudo('puppet agent -t', warn=True, env={'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'})
-                # ***conn.sudo('puppet agent -t', warn=True, env={'LANG': 'ru_RU.UTF-8', 'LC_ALL': 'ru_RU.UTF-8'})
+                res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
+                print(decode_output(res10))
                 # 11
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 # 12
