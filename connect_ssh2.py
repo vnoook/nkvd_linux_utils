@@ -3,6 +3,7 @@ import csv
 import fabric
 import socket
 import ipaddress
+import subprocess
 import lu_conf  # файл с доступами
 
 
@@ -102,12 +103,24 @@ def run() -> None:
                 # 4
                 # conn.sudo('remove-old-kernels -y')
                 # 5
-                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam')
-                # conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                #           r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                #           r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                #           r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                #           r' "http://10.101.39.10" "https://10.101.39.10"')
+                result_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
+                if result_search_cryptopro.return_code == 0:
+                    result_search_cryptopro_lic = conn.sudo(r' /opt/cprocsp/sbin/amd64/cpconfig -license -view', warn=True, hide=True)
+                    if result_search_cryptopro_lic.return_code == 0:
+                        conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                                  r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                                  r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                                  r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                                  r' "http://10.101.39.10" "https://10.101.39.10"')
+                        print(result_search_cryptopro.stdout)
+                        result_delparam = conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam', warn=True, hide=True)
+                        print(f'{result_delparam.return_code = }')
+                        print(f'{result_delparam.stderr = }')
+                        conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                                  r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                                  r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                                  r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                                  r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6 -------------
                 # conn.run('lsusb')
                 # 7
@@ -121,8 +134,8 @@ def run() -> None:
                 # 9
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
-                res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
-                print(decode_output(res10))
+                # res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
+                # print(decode_output(res10))
                 # 11
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 # 12
