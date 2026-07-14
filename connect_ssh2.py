@@ -105,11 +105,8 @@ def run() -> None:
                 # 5
                 res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
                 if res5_search_cryptopro.return_code == 0:
-                    # print(del_simbols(res5_search_cryptopro.stdout))
                     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
                     res5_delparam = conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam', warn=True, hide=True)
-                    # print(f'{res5_delparam.return_code = }')
-                    # print(f'{res5_delparam.stderr = }')
                     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
                               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
                               r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
