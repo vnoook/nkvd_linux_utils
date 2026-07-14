@@ -96,27 +96,28 @@ def run() -> None:
                 rez = conn.sudo('uname -r')
                 comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
-                # conn.sudo('apt-get update')
-                # conn.sudo('apt-get dist-upgrade -y')
+                conn.sudo('apt-get update')
+                conn.sudo('apt-get dist-upgrade -y')
                 # 3
-                # conn.sudo('update-kernel -y')
+                conn.sudo('update-kernel -y')
                 # 4
-                # conn.sudo('remove-old-kernels -y')
+                conn.sudo('remove-old-kernels -y')
                 # 5
                 res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
                 if res5_search_cryptopro.return_code == 0:
-                    print(del_simbols(res5_search_cryptopro.stdout))
+                    # print(del_simbols(res5_search_cryptopro.stdout))
                     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
                     res5_delparam = conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam', warn=True, hide=True)
-                    print(f'{res5_delparam.return_code = }')
-                    print(f'{res5_delparam.stderr = }')
+                    # print(f'{res5_delparam.return_code = }')
+                    # print(f'{res5_delparam.stderr = }')
                     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
                               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
                               r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
                               r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
                               r' "http://10.101.39.10" "https://10.101.39.10"')
-                # 6 -------------
-                # conn.run('lsusb')
+                # 6
+                res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
+                print(decode_output(res10))
                 # 7
                 # res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
                 #                 warn=True, hide=True)
@@ -128,9 +129,8 @@ def run() -> None:
                 # 9
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
-                # res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
-                # print(decode_output(res10))
-                # 11
+                # conn.run('lsusb')
+                # 11 -------------
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 # 12
                 # echo $DISPLAY
