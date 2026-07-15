@@ -95,25 +95,25 @@ def run() -> None:
                 rez = conn.sudo('uname -r')
                 comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
-                conn.sudo('apt-get update')
-                conn.sudo('apt-get dist-upgrade -y')
+                # conn.sudo('apt-get update')
+                # conn.sudo('apt-get dist-upgrade -y')
                 # 3
-                conn.sudo('update-kernel -y')
+                # conn.sudo('update-kernel -y')
                 # 4
-                conn.sudo('remove-old-kernels -y')
+                # conn.sudo('remove-old-kernels -y')
                 # 5
-                res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
-                if res5_search_cryptopro.return_code == 0:
-                    conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
-                    conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam', warn=True, hide=True)
-                    conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                              r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                              r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                              r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                              r' "http://10.101.39.10" "https://10.101.39.10"')
+                # res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
+                # if res5_search_cryptopro.return_code == 0:
+                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
+                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam', warn=True, hide=True)
+                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
+                #               r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
+                #               r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                #               r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6
-                res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
-                print(decode_output(res10))
+                # res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
+                # print(decode_output(res10))
                 # 7
                 # res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
                 #                 warn=True, hide=True)
@@ -126,7 +126,7 @@ def run() -> None:
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
                 # conn.run('lsusb')
-                # 11 -------------
+                # 11 -----------------------
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 # 12
                 # echo $DISPLAY
@@ -140,28 +140,6 @@ def run() -> None:
                 # conn.sudo('gsettings set org.gnome.system.proxy ignore-hosts "[\'localhost\', \'127.0.0.0/8\','
                 #           '\'::1\',\'portal\', \'*.egisznso.ru\', \'10.101.39.10\']"')
                 # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
-                # 13
-                # print()
-                # print('*'*46)
-                # result = conn.run("ping -c 3 006-000-99-999.arm.loc", hide=False)
-                # # print(f"stdout: {result.stdout = }")
-                # print(f"stderr: {result.stderr = }")
-                # print(f"stderr: {result.command = }")
-                # print(f"stderr: {result.disowned = }")
-                # print(f"stderr: {result.encoding = }")
-                # print(f"stderr: {result.env = }")
-                # print(f"stderr: {result.exited = }")
-                # print(f"stderr: {result.failed = }")
-                # print(f"stderr: {result.hide = }")
-                # print(f"stderr: {result.ok = }")
-                # print(f"stderr: {result.pid = }")
-                # print(f"stderr: {result.pty = }")
-                # print(f"stderr: {result.return_code = }")
-                # print(f"stderr: {result.shell = }")
-                # if result.failed:
-                #     print(f"Команда завершилась с ошибкой: {result.stderr}")
-                # else:
-                #     print(f"Успешно выполнено. Вывод:\n{result.stdout}")
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
