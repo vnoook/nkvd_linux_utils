@@ -127,8 +127,17 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                res11 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
+                def_ignore = "['localhost', '127.0.0.0/8', '::1']"
+                if res11.return_code == 0:
+                    if del_simbols(res11.stdout) == def_ignore:
+                        # gsettings reset org.gnome.system.proxy ignore-hosts
+                        print('++'*10, del_simbols(res11.stdout))
+                    else:
+                        print('- '*10, del_simbols(res11.stdout))
                 # 12
+                # export no_proxy="${no_proxy:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,zdravnsk.ru.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}"
+                # export NO_PROXY="${NO_PROXY:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,zdravnsk.ru.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}"
                 # echo $DISPLAY
                 # conn.sudo('echo $DISPLAY')
                 # export DISPLAY=:0
@@ -161,3 +170,18 @@ def run() -> None:
 
 if __name__ == '__main__':
     run()
+
+# print(f"stdout: {result.stdout = }")
+# print(f"stderr: {result.stderr = }")
+# print(f"stderr: {result.command = }")
+# print(f"stderr: {result.disowned = }")
+# print(f"stderr: {result.encoding = }")
+# print(f"stderr: {result.env = }")
+# print(f"stderr: {result.exited = }")
+# print(f"stderr: {result.failed = }")
+# print(f"stderr: {result.hide = }")
+# print(f"stderr: {result.ok = }")
+# print(f"stderr: {result.pid = }")
+# print(f"stderr: {result.pty = }")
+# print(f"stderr: {result.return_code = }")
+# print(f"stderr: {result.shell = }")
