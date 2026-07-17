@@ -130,11 +130,9 @@ def run() -> None:
                 res11 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
                 def_ignore = "['localhost', '127.0.0.0/8', '::1']"
                 if res11.return_code == 0:
-                    if del_simbols(res11.stdout) == def_ignore:
-                        # gsettings reset org.gnome.system.proxy ignore-hosts
-                        print('++'*10, del_simbols(res11.stdout))
-                    else:
+                    if del_simbols(res11.stdout) != def_ignore:
                         print('- '*10, del_simbols(res11.stdout))
+                        # gsettings reset org.gnome.system.proxy ignore-hosts
                 # 12
                 # export no_proxy="${no_proxy:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,zdravnsk.ru.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}"
                 # export NO_PROXY="${NO_PROXY:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,zdravnsk.ru.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}"
