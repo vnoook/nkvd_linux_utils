@@ -129,18 +129,20 @@ def run() -> None:
                 # 11 -----------------------
                 default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
 
-                res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                res11_1 = conn.sudo(r'gsettings get org.gnome.system.proxy ignore-hosts')
+                res11_2 = conn.sudo(r'dconf read /org/gnome/system/proxy/ignore-hosts')
+
                 # res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
                 # if res11_1.return_code == 0:
                 #     if del_simbols(res11_1.stdout) != default_ignore_list:
                 #         print('тут нужно поправить - ', del_simbols(res11_1.stdout))
                 #         print('поправляю на - ', default_ignore_list)
-                #         res11_2 = conn.sudo('gsettings reset org.gnome.system.proxy ignore-hosts')
-                #         if res11_2.return_code == 0:
-                #             res11_2 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                #         res11_1_1 = conn.sudo('gsettings reset org.gnome.system.proxy ignore-hosts')
+                #         if res11_1_1.return_code == 0:
+                #             res11_1_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
                 #             print('поправлено успешно')
                 #         else:
-                #             print(res11_2.stderr)
+                #             print(res11_1_1.stderr)
                 #     else:
                 #         print('------------------------- всё в порядке -', del_simbols(res11_1.stdout))
 
