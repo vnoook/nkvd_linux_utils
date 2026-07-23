@@ -127,15 +127,28 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                res11 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
-                def_ignore = "['localhost', '127.0.0.0/8', '::1']"
-                if res11.return_code == 0:
-                    if del_simbols(res11.stdout) != def_ignore:
-                        print('- '*10, del_simbols(res11.stdout))
-                        # gsettings reset org.gnome.system.proxy ignore-hosts
-                # 12
-                # export no_proxy="${no_proxy:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,zdravnsk.ru.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}"
-                # export NO_PROXY="${NO_PROXY:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,zdravnsk.ru.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}"
+                default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
+
+                res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                # res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
+                # if res11_1.return_code == 0:
+                #     if del_simbols(res11_1.stdout) != default_ignore_list:
+                #         print('тут нужно поправить - ', del_simbols(res11_1.stdout))
+                #         print('поправляю на - ', default_ignore_list)
+                #         res11_2 = conn.sudo('gsettings reset org.gnome.system.proxy ignore-hosts')
+                #         if res11_2.return_code == 0:
+                #             res11_2 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                #             print('поправлено успешно')
+                #         else:
+                #             print(res11_2.stderr)
+                #     else:
+                #         print('------------------------- всё в порядке -', del_simbols(res11_1.stdout))
+
+                # 12 -----------------------
+                # export no_proxy=("${no_proxy:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,"
+                #                  "zdravnsk.ru,.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}")
+                # export NO_PROXY=("${NO_PROXY:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,"
+                #                  "zdravnsk.ru,.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}")
                 # echo $DISPLAY
                 # conn.sudo('echo $DISPLAY')
                 # export DISPLAY=:0
