@@ -104,8 +104,10 @@ def run() -> None:
                 # 5
                 # res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
                 # if res5_search_cryptopro.return_code == 0:
-                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
-                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites" -delparam', warn=True, hide=True)
+                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
+                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites"'
+                #               r' -delparam')
                 #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
                 #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
                 #               r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
@@ -127,10 +129,12 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
-
-                res11_1 = conn.sudo(r'gsettings get org.gnome.system.proxy ignore-hosts')
-                res11_2 = conn.sudo(r'dconf read /org/gnome/system/proxy/ignore-hosts')
+                default_ignore_list = "localhost", "127.0.0.0/8", "::1"
+                nokkvd_ignore_list = "localhost", "127.0.0.0/8", "::1", "portal", "*.egisznso.ru", "10.101.39.10", "*.gov.ru", "*.arm.loc", "*.nokvd.local", "*.zdravnsk.ru"
+                cmd_no_proxy = 'echo "[org.gnome.system.proxy]\nignore-hosts=["localhost", "127.0.0.0/8", "::1", "portal", "*.egisznso.ru", "10.101.39.10", "*.gov.ru", "*.arm.loc", "*.nokvd.local", "*.zdravnsk.ru"]" > 99_global_proxy.gschema.override)'
+                cmd_no_proxy_compile = r"glib-compile-schemas /usr/share/glib-2.0/schemas/"
+                res11_1 = conn.sudo(cmd_no_proxy, warn=True)
+                res11_2 = conn.sudo(cmd_no_proxy_compile, warn=True)
 
                 # res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
                 # if res11_1.return_code == 0:
@@ -177,8 +181,8 @@ def run() -> None:
         print()
         print('*'*50)
 
-    for key, value in comp_dict.items():
-        print(f'{key},{value}')
+    # for key, value in comp_dict.items():
+    #     print(f'{key},{value}')
 
 
 if __name__ == '__main__':
