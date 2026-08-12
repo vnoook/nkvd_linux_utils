@@ -129,16 +129,22 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                default_ignore_list = """['localhost', '127.0.0.0/8', '::1']"""
-                nokkvd_ignore_list = """["localhost", "127.0.0.0/8", "::1", "portal", "*.egisznso.ru", "10.101.39.10", "*.gov.ru", "*.arm.loc", "*.nokvd.local", "*.zdravnsk.ru"]"""
-
-                # cmd_no_proxy_compile = r"glib-compile-schemas /usr/share/glib-2.0/schemas/"
-                # res11_2 = conn.sudo(cmd_no_proxy_compile, warn=True)
+                default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
+                nokkvd_ignore_list = "['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', '*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']"
 
                 res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
                 if (res11_1.return_code == 0) and (del_simbols(res11_1.stdout) != nokkvd_ignore_list):
                     print('на компе игнорлист такой - ', del_simbols(res11_1.stdout))
-                    print('надо поправить на - ', nokkvd_ignore_list)
+                    print('надо игнорлист менять на - ', nokkvd_ignore_list)
+
+                cmd_create_file = ("""echo -e "[org.gnome.system.proxy]\nignore-hosts="""+
+                                   nokkvd_ignore_list+
+                                   """" | sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override > /dev/null && sudo glib-compile-schemas /usr/share/glib-2.0/schemas/""")
+                res11_2 = conn.sudo(cmd_create_file, warn=True)
+                if res11_2.return_code == 0:
+                    print('игнорлист был такой - ', del_simbols(res11_1.stdout))
+                    res11_3 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
+                    print('а стал лист   такой - ', del_simbols(res11_3.stdout))
 
                 # 12 -----------------------
                 # ...
