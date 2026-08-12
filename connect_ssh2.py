@@ -141,21 +141,7 @@ def run() -> None:
                     print('надо поправить на - ', nokkvd_ignore_list)
 
                 # 12 -----------------------
-                # export no_proxy=("${no_proxy:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,"
-                #                  "zdravnsk.ru,.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}")
-                # export NO_PROXY=("${NO_PROXY:-egisznso.ru,.egisznso.ru,localhost,nokvd,nokvd.local,"
-                #                  "zdravnsk.ru,.zdravnsk.ru,portal,10.101.39.10,arm.loc,.arm.loc}")
-                # echo $DISPLAY
-                # conn.sudo('echo $DISPLAY')
-                # export DISPLAY=:0
-                # rez2 = conn.sudo('export DISPLAY=:1.0')
-                # result = conn.run('export DISPLAY=:1.0 && echo $DISPLAY')
-                # conn.sudo('export DISPLAY=:1.0 && echo $DISPLAY')
-                # gsettings set org.gnome.system.proxy ignore-hosts ("['localhost', '127.0.0.0/8', '::1', 'portal',"
-                #                                                    "'*.egisznso.ru', '10.101.39.10']")
-                # conn.sudo('gsettings set org.gnome.system.proxy ignore-hosts "[\'localhost\', \'127.0.0.0/8\','
-                #           '\'::1\',\'portal\', \'*.egisznso.ru\', \'10.101.39.10\']"')
-                # conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts')
+                # ...
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
