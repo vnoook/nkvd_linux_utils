@@ -131,33 +131,33 @@ def run() -> None:
                 # 11 -----------------------
                 # default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
                 nokkvd_ignore_list = "['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', '*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']"
-                # proxy_capter1 = "[org.gnome.system.proxy]"
+                proxy_capter1 = "[org.gnome.system.proxy]"
                 proxy_capter2 = "[org.gnome.system.proxy.http]"
                 proxy_capter3 = "[org.gnome.system.proxy.https]"
+                proxy_ignore = "ignore-hosts="
                 proxy_mode = "mode = 'manual'"
                 proxy_host = "host = '192.168.10.200'"
                 proxy_port = "port=8080"
                 proxy_enable = "enabled=true"
-                # compile_schemas = "sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
-                # tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override"
+                tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override"
+                compile_schemas = " > /dev/null && sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
 
-                cmd_create_file = ("""echo -e "[org.gnome.system.proxy]\nignore-hosts=""" +
-                                   nokkvd_ignore_list + "\n" +
-                                   proxy_mode + "\n" +
-                                   "\n" +
+                cmd_create_file = ("""echo -e \"""" +
+                                   proxy_capter1 + "\n" +
+                                   proxy_ignore + nokkvd_ignore_list + "\n" +
+                                   proxy_mode + "\n\n" +
                                    proxy_capter2 + "\n" +
                                    proxy_host + "\n" +
                                    proxy_port + "\n" +
-                                   proxy_enable + "\n" +
-                                   "\n" +
+                                   proxy_enable + "\n\n" +
                                    proxy_capter3 + "\n" +
                                    proxy_host + "\n" +
-                                   proxy_port + "\n" +
-                                   "\n" +
-                                   """" | sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override""" +
-                                   """ > """ +
-                                   """/dev/null && sudo glib-compile-schemas /usr/share/glib-2.0/schemas/""")
+                                   proxy_port + """\n\n" | """ +
+                                   tee_to_file +
+                                   compile_schemas)
                 res11 = conn.sudo(cmd_create_file, warn=True)
+                if res11.return_code == 0:
+                    print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
 
                 # 12 -----------------------
                 # ...
