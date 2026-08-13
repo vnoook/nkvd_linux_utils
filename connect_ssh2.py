@@ -129,22 +129,35 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
+                # default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
                 nokkvd_ignore_list = "['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', '*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']"
+                # proxy_capter1 = "[org.gnome.system.proxy]"
+                proxy_capter2 = "[org.gnome.system.proxy.http]"
+                proxy_capter3 = "[org.gnome.system.proxy.https]"
+                proxy_mode = "mode = 'manual'"
+                proxy_host = "host = '192.168.10.200'"
+                proxy_port = "port=8080"
+                proxy_enable = "enabled=true"
+                # compile_schemas = "sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
+                # tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override"
 
-                res11_1 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
-                if (res11_1.return_code == 0) and (del_simbols(res11_1.stdout) != nokkvd_ignore_list):
-                    print('на компе игнорлист такой - ', del_simbols(res11_1.stdout))
-                    print('надо игнорлист менять на - ', nokkvd_ignore_list)
-
-                cmd_create_file = ("""echo -e "[org.gnome.system.proxy]\nignore-hosts="""+
-                                   nokkvd_ignore_list+
-                                   """" | sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override > /dev/null && sudo glib-compile-schemas /usr/share/glib-2.0/schemas/""")
-                res11_2 = conn.sudo(cmd_create_file, warn=True)
-                if res11_2.return_code == 0:
-                    print('игнорлист был такой - ', del_simbols(res11_1.stdout))
-                    res11_3 = conn.sudo('gsettings get org.gnome.system.proxy ignore-hosts', warn=True, hide=True)
-                    print('а стал лист   такой - ', del_simbols(res11_3.stdout))
+                cmd_create_file = ("""echo -e "[org.gnome.system.proxy]\nignore-hosts=""" +
+                                   nokkvd_ignore_list + "\n" +
+                                   proxy_mode + "\n" +
+                                   "\n" +
+                                   proxy_capter2 + "\n" +
+                                   proxy_host + "\n" +
+                                   proxy_port + "\n" +
+                                   proxy_enable + "\n" +
+                                   "\n" +
+                                   proxy_capter3 + "\n" +
+                                   proxy_host + "\n" +
+                                   proxy_port + "\n" +
+                                   "\n" +
+                                   """" | sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override""" +
+                                   """ > """ +
+                                   """/dev/null && sudo glib-compile-schemas /usr/share/glib-2.0/schemas/""")
+                res11 = conn.sudo(cmd_create_file, warn=True)
 
                 # 12 -----------------------
                 # ...
