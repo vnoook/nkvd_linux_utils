@@ -92,8 +92,8 @@ def run() -> None:
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
-                # rez = conn.sudo('uname -r')
-                # comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
+                rez = conn.sudo('uname -r')
+                comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
                 # conn.sudo('apt-get update')
                 # conn.sudo('apt-get dist-upgrade -y')
@@ -139,8 +139,8 @@ def run() -> None:
                 proxy_ignore = "ignore-hosts="
                 proxy_mode = "mode = 'manual'"
                 proxy_host = "host = '192.168.10.200'"
-                proxy_port = "port=8080"
-                proxy_enable = "enabled=true"
+                proxy_port = "port = 8080"
+                proxy_enable = "enabled = true"
                 tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override"
                 compile_schemas = " > /dev/null && sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
 
