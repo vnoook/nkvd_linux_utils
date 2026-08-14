@@ -92,8 +92,8 @@ def run() -> None:
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
-                rez = conn.sudo('uname -r')
-                comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
+                # rez = conn.sudo('uname -r')
+                # comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
                 # conn.sudo('apt-get update')
                 # conn.sudo('apt-get dist-upgrade -y')
@@ -109,9 +109,10 @@ def run() -> None:
                 #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites"'
                 #               r' -delparam')
                 #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru" "https://*.cryptopro.ru"'
-                #               r' "http://*.cryptopro.ru" "http://*.cadescompany.ru" "http://dlo-app.egisznso.ru"'
-                #               r' "https://dlo-app.egisznso.ru" "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"'
+                #               r' "https://*.cryptopro.ru" "http://*.cryptopro.ru" "http://*.cadescompany.ru"'
+                #               r' "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
+                #               r' "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
                 #               r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6
                 # res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
@@ -129,8 +130,9 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                # default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
-                nokkvd_ignore_list = "['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', '*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']"
+                default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
+                nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', "
+                                      "'*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']")
                 proxy_capter1 = "[org.gnome.system.proxy]"
                 proxy_capter2 = "[org.gnome.system.proxy.http]"
                 proxy_capter3 = "[org.gnome.system.proxy.https]"
@@ -155,6 +157,7 @@ def run() -> None:
                                    proxy_port + """\n\n" | """ +
                                    tee_to_file +
                                    compile_schemas)
+
                 res11 = conn.sudo(cmd_create_file, warn=True)
                 if res11.return_code == 0:
                     print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
