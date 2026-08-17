@@ -90,9 +90,7 @@ def get_ignorehosts_host_user(host, user, passwrd) -> str:
         if errors:
             return f"Ошибка: {errors}"
 
-        # Фильтруем пустые строки, если папок нет
-        ignore_hosts = [f for f in ignore_hosts if f]
-        return ignore_hosts
+        return ignore_hosts[0]
 
     except Exception as e:
         return host, f"Не удалось подключиться: {str(e)}"
@@ -121,7 +119,8 @@ def main():
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                     if ((cur_getignore != connect_ssh2.default_ignore_list)
                             and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
-                        print("\033[1;31m" + f"{cur_getignore}" + "\033[0m")
+                        print("\033[1;33m" + f"{user_name}" + "\033[0m", end='   ')
+                        print("\033[1;33m" + f"{cur_getignore}" + "\033[0m")
         else:
             print(f"  {output}")
         print("-" * 40)
