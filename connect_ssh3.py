@@ -14,7 +14,7 @@ users_csv = 'res/users.csv'
 
 # функция чтения файла и получения из него списка имён пользователей и их секреты
 def read_users_csv(users_file) -> dict:
-    users_dict = dict()
+    users_dict = {}
     # чтение файла с пользователями
     with open(users_file, encoding='cp1251', newline='') as csvfile:
         row_csv_content = csv.reader(csvfile, delimiter=',')
@@ -103,13 +103,14 @@ def main():
 
     comp_list = read_file_csv(file_csv)
     users_dict = read_users_csv(users_csv)
+    comp_dict = {}
 
     # Запуск опроса в несколько потоков для скорости
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         results = executor.map(get_folders_from_host, comp_list)
 
     for host, output in results:
-        print("=== Результат для " + "\033[1;32m" + f"{host}" + "\033[0m" + " ===")
+        # print("=== Результат для " + "\033[1;32m" + f"{host}" + "\033[0m" + " ===")
         if isinstance(output, list):
             for folder in output:
                 user_name = folder
@@ -126,5 +127,20 @@ def main():
             print(f"  {output}")
         print("-" * 40)
 
+    if connect_ssh2.is_ip_address(connect_ssh2.get_host_ip(host)):
+        # comp_dict[comp] = ', '.join((str(get_host_ip(host)), del_simbols(error_msg)))
+        pass
+    else:
+        # comp_dict[comp] = del_simbols(error_msg)
+        pass
+
+    print('*' * 50)
+    for key, value in comp_dict.items():
+        print(f'{key},{value}')
+
+
 if __name__ == "__main__":
     main()
+
+# gsettings reset org.gnome.system.proxy ignore-hosts
+# gsettings get org.gnome.system.proxy ignore-hosts
