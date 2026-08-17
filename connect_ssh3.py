@@ -35,6 +35,7 @@ def read_file_csv(file_csv) -> list:
     return comp_name_list
 
 
+# функция получения содержимого папки с пользователями на компе host
 def get_folders_from_host(host):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -69,6 +70,45 @@ def get_folders_from_host(host):
         client.close()
 
 
+# функция получения параметра ignore-host у конкретного пользователя на конкретном host
+def get_ignorehosts_host_user(host, user, passwrd) -> str:
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    try:
+        # Подключение к хосту
+        client.connect(
+            hostname=host,
+            username=user,
+            password=passwrd,
+            timeout=5,
+        )
+
+        command = f"gsettings get org.gnome.system.proxy ignore-hosts"
+        stdin, stdout, stderr = client.exec_command(command)
+
+        ignore_hosts = stdout.read().decode("utf-8").strip().split("\n")
+        errors = stderr.read().decode("utf-8").strip()
+
+        print(ignore_hosts)
+        print(len(ignore_hosts))
+        print('*'*22)
+        print(errors)
+        exit()
+
+        if errors:
+            return host, f"Ошибка: {errors}"
+
+        # Фильтруем пустые строки, если папок нет
+        folders = [f for f in folders if f]
+        return host, folders if folders else ["Папки не найдены или директория пуста"]
+
+    except Exception as e:
+        return host, f"Не удалось подключиться: {str(e)}"
+    finally:
+        client.close()
+
+
 def main():
     print("Начинаю сбор данных с компьютеров...\n")
 
@@ -85,9 +125,11 @@ def main():
             for folder in output:
                 user_name = folder
                 if user_name in users_dict:
-                    print(user_name)
+                    user_pass = users_dict[user_name]
+                    print(user_name, user_pass)
                     # print(f"  [Папка] {user_name}")
                     # print(f"    [Пользователь] {user_name}")
+                    get_ignorehosts_host_user(host, user_name, user_pass)
         else:
             print(f"  {output}")
         print("-" * 40)
