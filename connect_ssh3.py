@@ -119,6 +119,7 @@ def main():
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                     if ((cur_getignore != connect_ssh2.default_ignore_list)
                             and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
+                        print("\033[1;33m" + f"{host}" + "\033[0m", end='   ')
                         print("\033[1;33m" + f"{user_name}" + "\033[0m", end='   ')
                         print("\033[1;33m" + f"{cur_getignore}" + "\033[0m")
         else:
