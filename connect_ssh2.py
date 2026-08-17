@@ -5,6 +5,11 @@ import socket
 import ipaddress
 import lu_conf  # файл с доступами
 
+file_csv = 'res/hosts.csv'
+default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
+nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', "
+                      "'*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']")
+
 
 # функция для проверки компа в сети и доступности на нём порта 22
 def check_host_accessibility(host: str) -> bool:
@@ -67,7 +72,6 @@ def read_file_csv(file_csv) -> list:
 # основная функция запуска приложения
 def run() -> None:
     # переменные
-    file_csv = 'hosts.csv'
     comp_dict = {}
 
     # чтение файла
@@ -130,9 +134,6 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
-                nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', "
-                                      "'*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']")
                 proxy_capter1 = "[org.gnome.system.proxy]"
                 proxy_capter2 = "[org.gnome.system.proxy.http]"
                 proxy_capter3 = "[org.gnome.system.proxy.https]"
@@ -185,18 +186,3 @@ def run() -> None:
 
 if __name__ == '__main__':
     run()
-
-# print(f"stdout: {result.stdout = }")
-# print(f"stderr: {result.stderr = }")
-# print(f"stderr: {result.command = }")
-# print(f"stderr: {result.disowned = }")
-# print(f"stderr: {result.encoding = }")
-# print(f"stderr: {result.env = }")
-# print(f"stderr: {result.exited = }")
-# print(f"stderr: {result.failed = }")
-# print(f"stderr: {result.hide = }")
-# print(f"stderr: {result.ok = }")
-# print(f"stderr: {result.pid = }")
-# print(f"stderr: {result.pty = }")
-# print(f"stderr: {result.return_code = }")
-# print(f"stderr: {result.shell = }")
