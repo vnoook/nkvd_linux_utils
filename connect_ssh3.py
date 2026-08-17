@@ -83,25 +83,16 @@ def get_ignorehosts_host_user(host, user, passwrd) -> str:
             password=passwrd,
             timeout=5,
         )
-
-        command = f"gsettings get org.gnome.system.proxy ignore-hosts"
-        stdin, stdout, stderr = client.exec_command(command)
-
+        stdin, stdout, stderr = client.exec_command("gsettings get org.gnome.system.proxy ignore-hosts")
         ignore_hosts = stdout.read().decode("utf-8").strip().split("\n")
         errors = stderr.read().decode("utf-8").strip()
 
-        print(ignore_hosts)
-        print(len(ignore_hosts))
-        print('*'*22)
-        print(errors)
-        exit()
-
         if errors:
-            return host, f"Ошибка: {errors}"
+            return f"Ошибка: {errors}"
 
         # Фильтруем пустые строки, если папок нет
-        folders = [f for f in folders if f]
-        return host, folders if folders else ["Папки не найдены или директория пуста"]
+        ignore_hosts = [f for f in ignore_hosts if f]
+        return ignore_hosts
 
     except Exception as e:
         return host, f"Не удалось подключиться: {str(e)}"
@@ -126,10 +117,11 @@ def main():
                 user_name = folder
                 if user_name in users_dict:
                     user_pass = users_dict[user_name]
-                    print(user_name, user_pass)
-                    # print(f"  [Папка] {user_name}")
-                    # print(f"    [Пользователь] {user_name}")
-                    get_ignorehosts_host_user(host, user_name, user_pass)
+
+                    cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
+                    if ((cur_getignore != connect_ssh2.default_ignore_list)
+                            and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
+                        print("\033[1;31m" + f"{cur_getignore}" + "\033[0m")
         else:
             print(f"  {output}")
         print("-" * 40)
