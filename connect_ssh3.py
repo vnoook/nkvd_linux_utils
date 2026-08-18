@@ -24,10 +24,10 @@ def read_users_csv(users_file) -> dict:
 
 
 # функция чтения файла и получения из него списка имён компов
-def read_file_csv(file_csv) -> list:
+def read_file_csv(file) -> list:
     comp_name_list = []
     # чтение файла с адресами компов
-    with open(file_csv, encoding='cp1251', newline='') as csvfile:
+    with open(file, encoding='cp1251', newline='') as csvfile:
         row_csv_content = csv.reader(csvfile, delimiter=',')
         next(row_csv_content)  # пропускаю первую строку
         for row in row_csv_content:
@@ -36,14 +36,14 @@ def read_file_csv(file_csv) -> list:
 
 
 # функция получения содержимого папки с пользователями на компе host
-def get_folders_from_host(host):
+def get_folders_from_host(host_name) -> tuple:
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     try:
         # Подключение к хосту
         client.connect(
-            hostname=host,
+            hostname=host_name,
             username=SSH_USER,
             password=SSH_PASSWORD,
             timeout=3,
@@ -58,14 +58,17 @@ def get_folders_from_host(host):
         errors = stderr.read().decode("utf-8").strip()
 
         if errors:
-            return host, f"Ошибка: {errors}"
+            return host_name, f"Ошибка на {host_name}: {errors}"
 
         # Фильтруем пустые строки, если папок нет
         folders = [f for f in folders if f]
-        return host, folders if folders else ["Папки не найдены или директория пуста"]
+        return host_name, folders if folders else ["Папки не найдены или директория пуста"]
 
     except Exception as e:
-        return host, f"Не удалось подключиться: {str(e)}"
+        print(host_name)
+        ret1 = (host_name, f"{host_name}, Не удалось подключиться к {host_name}: {str(e)}")
+        # return host_name, f"{host_name}, Не удалось подключиться к {host_name}: {str(e)}"
+        return ret1
     finally:
         client.close()
 
@@ -90,51 +93,46 @@ def get_ignorehosts_host_user(host, user, passwrd) -> str:
         if errors:
             return f"Ошибка: {errors}"
 
-        return ignore_hosts[0]
+        # return ignore_hosts[0]
+        return str(ignore_hosts[0]) if not isinstance(ignore_hosts[0], str) else ignore_hosts[0]
 
     except Exception as e:
-        return host, f"Не удалось подключиться: {str(e)}"
+        return f"Не удалось подключиться к {host}: {str(e)}"
     finally:
         client.close()
 
 
 def main():
-    print("Начинаю сбор данных с компьютеров...\n")
-
     comp_list = read_file_csv(file_csv)
     users_dict = read_users_csv(users_csv)
-    comp_dict = {}
+    # comp_dict = {}
+
+    print("Начинаю сбор данных с компьютеров ...\n")
 
     # Запуск опроса в несколько потоков для скорости
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
         results = executor.map(get_folders_from_host, comp_list)
+
+    print("Сбор данных закончен, начинаю обработку ...\n")
 
     for host, output in results:
         # print("=== Результат для " + "\033[1;32m" + f"{host}" + "\033[0m" + " ===")
         if isinstance(output, list):
             for folder in output:
                 user_name = folder
-                if user_name in users_dict:
+                if user_name in users_dict.keys():
                     user_pass = users_dict[user_name]
 
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                     if ((cur_getignore != connect_ssh2.default_ignore_list)
                             and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
+                        # print(host)
+                        # print(user_name)
+                        # print(cur_getignore)
                         print(host + ", " + user_name + ", " + cur_getignore)
         else:
             print(f"  {output}")
         print("-" * 40)
-
-    if connect_ssh2.is_ip_address(connect_ssh2.get_host_ip(host)):
-        # comp_dict[comp] = ', '.join((str(get_host_ip(host)), del_simbols(error_msg)))
-        pass
-    else:
-        # comp_dict[comp] = del_simbols(error_msg)
-        pass
-
-    print('*' * 50)
-    for key, value in comp_dict.items():
-        print(f'{key},{value}')
 
 
 if __name__ == "__main__":
@@ -142,3 +140,14 @@ if __name__ == "__main__":
 
 # gsettings reset org.gnome.system.proxy ignore-hosts
 # gsettings get org.gnome.system.proxy ignore-hosts
+
+    # if connect_ssh2.is_ip_address(connect_ssh2.get_host_ip(host)):
+    #     # comp_dict[comp] = ', '.join((str(get_host_ip(host)), del_simbols(error_msg)))
+    #     pass
+    # else:
+    #     # comp_dict[comp] = del_simbols(error_msg)
+    #     pass
+    #
+    # print('*' * 50)
+    # for key, value in comp_dict.items():
+    #     print(f'{key},{value}')
