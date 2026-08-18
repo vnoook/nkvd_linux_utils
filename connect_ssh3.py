@@ -73,13 +73,13 @@ def get_folders_from_host(host_name) -> tuple:
 
 
 # функция получения параметра ignore-host у конкретного пользователя на конкретном host
-def get_ignorehosts_host_user(host, user, passwrd) -> str:
+def get_ignorehosts_host_user(host_name, user, passwrd) -> str:
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
         # Подключение к хосту
         client.connect(
-            hostname=host,
+            hostname=host_name,
             username=user,
             password=passwrd,
             timeout=time_out
@@ -94,7 +94,8 @@ def get_ignorehosts_host_user(host, user, passwrd) -> str:
         return str(ignore_hosts[0]) if not isinstance(ignore_hosts[0], str) else ignore_hosts[0]
 
     except Exception as e:
-        return f"Не удалось подключиться к {host}: {str(e)}"
+        # return f"Не удалось подключиться к {host_name}: {str(e)}"
+        return f"Не удалось подключиться: {str(e)}"
     finally:
         client.close()
 
@@ -124,8 +125,8 @@ def main():
                     if ((cur_getignore != connect_ssh2.default_ignore_list)
                             and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
                         print(host + "," + user_name + "," + cur_getignore)
-        else:
-            print(f"{output}")
+        # else:
+        #     print(host + ",")
 
 
 if __name__ == "__main__":
