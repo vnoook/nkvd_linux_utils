@@ -10,6 +10,7 @@ SSH_PASSWORD = lu_conf.secret
 TARGET_DIR = lu_conf.users_dir
 file_csv = 'res/hosts.csv'
 users_csv = 'res/users.csv'
+time_out = 2
 
 
 # функция чтения файла и получения из него списка имён пользователей и их секреты
@@ -39,16 +40,14 @@ def read_file_csv(file) -> list:
 def get_folders_from_host(host_name) -> tuple:
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
     try:
         # Подключение к хосту
         client.connect(
             hostname=host_name,
             username=SSH_USER,
             password=SSH_PASSWORD,
-            timeout=3,
+            timeout=time_out
         )
-
         # Команда выводит только имена папок (тип d) в указанной директории
         # -maxdepth 1 и -mindepth 1 исключают саму папку и вложенные подпапки
         command = f"find {TARGET_DIR} -mindepth 1 -maxdepth 1 -type d -printf '%f\\n'"
@@ -58,17 +57,17 @@ def get_folders_from_host(host_name) -> tuple:
         errors = stderr.read().decode("utf-8").strip()
 
         if errors:
-            return host_name, f"Ошибка на {host_name}: {errors}"
+            # return host_name, f"Ошибка на {host_name}: {errors}"
+            return host_name, ""
 
         # Фильтруем пустые строки, если папок нет
         folders = [f for f in folders if f]
-        return host_name, folders if folders else ["Папки не найдены или директория пуста"]
+        # return host_name, folders if folders else ["Папки не найдены или директория пуста"]
+        return host_name, folders if folders else ""
 
     except Exception as e:
-        print(host_name)
-        ret1 = (host_name, f"{host_name}, Не удалось подключиться к {host_name}: {str(e)}")
-        # return host_name, f"{host_name}, Не удалось подключиться к {host_name}: {str(e)}"
-        return ret1
+        # return host_name, f"{host_name},Не удалось подключиться к {host_name}: {str(e)}"
+        return host_name, ""
     finally:
         client.close()
 
@@ -77,23 +76,21 @@ def get_folders_from_host(host_name) -> tuple:
 def get_ignorehosts_host_user(host, user, passwrd) -> str:
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
     try:
         # Подключение к хосту
         client.connect(
             hostname=host,
             username=user,
             password=passwrd,
-            timeout=5,
+            timeout=time_out
         )
         stdin, stdout, stderr = client.exec_command("gsettings get org.gnome.system.proxy ignore-hosts")
         ignore_hosts = stdout.read().decode("utf-8").strip().split("\n")
-        errors = stderr.read().decode("utf-8").strip()
 
+        errors = stderr.read().decode("utf-8").strip()
         if errors:
             return f"Ошибка: {errors}"
 
-        # return ignore_hosts[0]
         return str(ignore_hosts[0]) if not isinstance(ignore_hosts[0], str) else ignore_hosts[0]
 
     except Exception as e:
@@ -107,16 +104,16 @@ def main():
     users_dict = read_users_csv(users_csv)
     # comp_dict = {}
 
-    print("Начинаю сбор данных с компьютеров ...\n")
-
+    print("\033[1;32m" + "Начинаю сбор данных с компьютеров ..." + "\033[0m")
     # Запуск опроса в несколько потоков для скорости
     with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
         results = executor.map(get_folders_from_host, comp_list)
-
-    print("Сбор данных закончен, начинаю обработку ...\n")
+    print("\033[1;32m" + "Сбор данных закончен, начинаю обработку ..." + "\033[0m")
 
     for host, output in results:
-        # print("=== Результат для " + "\033[1;32m" + f"{host}" + "\033[0m" + " ===")
+        # print(host+","+str(output) if output else host)
+        # continue
+
         if isinstance(output, list):
             for folder in output:
                 user_name = folder
@@ -126,13 +123,9 @@ def main():
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                     if ((cur_getignore != connect_ssh2.default_ignore_list)
                             and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
-                        # print(host)
-                        # print(user_name)
-                        # print(cur_getignore)
-                        print(host + ", " + user_name + ", " + cur_getignore)
+                        print(host + "," + user_name + "," + cur_getignore)
         else:
-            print(f"  {output}")
-        print("-" * 40)
+            print(f"{output}")
 
 
 if __name__ == "__main__":
