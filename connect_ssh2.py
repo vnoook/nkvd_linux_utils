@@ -13,7 +13,7 @@ nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', "
                       # "'', '', '', '', '', '', '', '', "
                       "'sedd.nso.ru', 'fman.nso.ru', 'apmon.nso.ru', 'cm.nso.ru', "
                       "'owa.nso.ru', 'digit.nso.ru', 'svod.egisznso.ru', 'dlo-app.egisznso.ru', "
-                      "'portalmr.egisz.rosminzdrav.ru', "
+                      # "'portalmr.egisz.rosminzdrav.ru', "
                       "'portal', '*.egisznso.ru', '*.arm.loc', '*.nokvd.local', "
                       "'11.0.0.2', '11.0.0.5', '11.0.0.160', '10.0.10.1', '10.1.29.18', '10.101.39.10', "
                       "'10.101.36.162', '10.101.36.163', '10.101.36.164', '10.101.36.167', '10.101.36.168', "
@@ -109,7 +109,7 @@ def run() -> None:
             try:
                 # 1
                 rez = conn.sudo('uname -r')
-                comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(rez.stdout)))
+                comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(rez.stdout)))
                 # 2
                 # conn.sudo('apt-get update')
                 # conn.sudo('apt-get dist-upgrade -y')
@@ -180,13 +180,13 @@ def run() -> None:
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
-                comp_dict[comp] = ', '.join((get_host_ip(comp), del_simbols(str(_err))))
+                comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(str(_err))))
             conn.close()
         else:
             error_msg = '--- не в сети или нет доступа по SSH ---'
             print(error_msg)
             if is_ip_address(get_host_ip(comp)):
-                comp_dict[comp] = ', '.join((str(get_host_ip(comp)), del_simbols(error_msg)))
+                comp_dict[comp] = ','.join((str(get_host_ip(comp)), del_simbols(error_msg)))
             else:
                 comp_dict[comp] = del_simbols(error_msg)
         print()

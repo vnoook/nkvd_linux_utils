@@ -155,6 +155,7 @@ def main():
 
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                     print(host + "," + user_name + "," + cur_getignore)
+                    print()
 
                     # if ((cur_getignore != cs2.default_ignore_list)
                     #         and (cur_getignore != cs2.nokkvd_ignore_list)):
