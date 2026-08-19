@@ -122,9 +122,10 @@ def main():
                     user_pass = users_dict[user_name]
 
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
-                    if ((cur_getignore != connect_ssh2.default_ignore_list)
-                            and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
-                        print(host + "," + user_name + "," + cur_getignore)
+                    print(host + "," + user_name + "," + cur_getignore)
+                    # if ((cur_getignore != connect_ssh2.default_ignore_list)
+                    #         and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
+                    #     print(host + "," + user_name + "," + cur_getignore)
         # else:
         #     print(host + ",")
 
