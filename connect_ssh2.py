@@ -10,11 +10,11 @@ default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
 # nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', "
 #                       "'*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']")
 nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', "
-                      "'portal', '*.egisznso.ru', '*.arm.loc', '*.nokvd.local', "
-                      "'*.nso.ru', '*.nsk.ru', '*.gov.ru', '*.zdravnsk.ru', '*.ffoms.gov.ru', "
                       "'sedd.nso.ru', 'fman.nso.ru', "
+                      "'portal', '*.egisznso.ru', '*.arm.loc', '*.nokvd.local', "
                       "'11.0.0.2', '11.0.0.5', '11.0.0.160', '10.0.10.1', '10.1.29.18', '10.101.39.10', "
                       "'10.101.36.162', '10.101.36.163', '10.101.36.164', '10.101.36.167', '10.101.36.168', "
+                      "'*.nso.ru', '*.nsk.ru', '*.gov.ru', '*.zdravnsk.ru', '*.ffoms.gov.ru', "
                       "'172.16.0.0/18', '192.168.0.0/18', "
                       "'172.16.10.0/24', '172.16.20.0/24', '172.16.30.0/24', '172.16.40.0/24', '172.16.50.0/24']")
 
