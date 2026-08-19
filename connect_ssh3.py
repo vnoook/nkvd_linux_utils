@@ -2,7 +2,7 @@ import concurrent.futures
 import paramiko
 import csv
 import lu_conf  # файл с доступами
-import connect_ssh2
+import connect_ssh2 as cs2
 
 # Настройки подключения
 SSH_USER = lu_conf.user
@@ -10,7 +10,7 @@ SSH_PASSWORD = lu_conf.secret
 TARGET_DIR = lu_conf.users_dir
 file_csv = 'res/hosts.csv'
 users_csv = 'res/users.csv'
-time_out = 2
+time_out = 1
 
 
 # функция чтения файла и получения из него списка имён пользователей и их секреты
@@ -156,8 +156,8 @@ def main():
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                     print(host + "," + user_name + "," + cur_getignore)
 
-                    # if ((cur_getignore != connect_ssh2.default_ignore_list)
-                    #         and (cur_getignore != connect_ssh2.nokkvd_ignore_list)):
+                    # if ((cur_getignore != cs2.default_ignore_list)
+                    #         and (cur_getignore != cs2.nokkvd_ignore_list)):
                     #     print(host + "," + user_name + "," + cur_getignore)
         # else:
         #     print(host + ",")
@@ -169,7 +169,7 @@ if __name__ == "__main__":
 # gsettings reset org.gnome.system.proxy ignore-hosts
 # gsettings get org.gnome.system.proxy ignore-hosts
 
-    # if connect_ssh2.is_ip_address(connect_ssh2.get_host_ip(host)):
+    # if cs2.is_ip_address(cs2.get_host_ip(host)):
     #     # comp_dict[comp] = ', '.join((str(get_host_ip(host)), del_simbols(error_msg)))
     #     pass
     # else:
