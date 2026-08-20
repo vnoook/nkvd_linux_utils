@@ -146,13 +146,13 @@ def main():
                     user_pass = users_dict[user_name]
 
                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
-                    print(host + "," + user_name + "," + cur_getignore)
 
-                    reset_ignorehosts_host_user(host, user_name, user_pass)
-
-                    cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
-                    print(host + "," + user_name + "," + cur_getignore)
-                    print()
+                    if cur_getignore != cs2.nokkvd_ignore_list:
+                        print(host + "," + user_name + "," + cur_getignore)
+                        reset_ignorehosts_host_user(host, user_name, user_pass)
+                        cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
+                        print(host + "," + user_name + "," + cur_getignore)
+                        print()
 
 
 if __name__ == "__main__":
