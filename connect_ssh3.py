@@ -139,9 +139,6 @@ def main():
     print("\033[1;32m" + "Сбор данных закончен, начинаю обработку ..." + "\033[0m")
 
     for host, output in results:
-        # print(host+","+str(output) if output else host)
-        # continue
-
         if isinstance(output, list):
             for folder in output:
                 user_name = folder
@@ -157,26 +154,9 @@ def main():
                     print(host + "," + user_name + "," + cur_getignore)
                     print()
 
-                    # if ((cur_getignore != cs2.default_ignore_list)
-                    #         and (cur_getignore != cs2.nokkvd_ignore_list)):
-                    #     print(host + "," + user_name + "," + cur_getignore)
-        # else:
-        #     print(host + ",")
-
 
 if __name__ == "__main__":
     main()
 
 # gsettings reset org.gnome.system.proxy ignore-hosts
 # gsettings get org.gnome.system.proxy ignore-hosts
-
-    # if cs2.is_ip_address(cs2.get_host_ip(host)):
-    #     # comp_dict[comp] = ', '.join((str(get_host_ip(host)), del_simbols(error_msg)))
-    #     pass
-    # else:
-    #     # comp_dict[comp] = del_simbols(error_msg)
-    #     pass
-    #
-    # print('*' * 50)
-    # for key, value in comp_dict.items():
-    #     print(f'{key},{value}')
