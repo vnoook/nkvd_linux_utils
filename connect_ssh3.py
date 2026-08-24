@@ -10,7 +10,7 @@ SSH_PASSWORD = lu_conf.secret
 TARGET_DIR = lu_conf.users_dir
 file_csv = 'res/hosts.csv'
 users_csv = 'res/users.csv'
-time_out = 1
+time_out = 2
 
 
 # функция чтения файла и получения из него списка имён пользователей и их секреты
