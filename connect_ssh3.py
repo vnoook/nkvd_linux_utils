@@ -153,6 +153,8 @@ def main():
                         cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
                         print(host + "," + user_name + "," + cur_getignore)
                         print()
+                else:
+                    print("\033[1;31m" + f"{user_name} отсутствует в списке юзеров" + "\033[0m")
 
 
 if __name__ == "__main__":
