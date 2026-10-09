@@ -17,7 +17,7 @@ nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', "
                       "'portal', '*.egisznso.ru', '*.arm.loc', '*.nokvd.local', "
                       "'11.0.0.2', '11.0.0.5', '11.0.0.160', '10.0.10.1', '10.1.29.18', '10.101.39.10', "
                       "'10.101.36.162', '10.101.36.163', '10.101.36.164', '10.101.36.167', '10.101.36.168', "
-                      "'10.101.49.70', '10.101.36.131', '188.254.48.188', '11.0.0.40', '10.101.64.119', '10.0.10.7:97', "
+                      "'10.101.49.70', '10.101.36.131', '188.254.48.188', '11.0.0.40', '10.101.64.119', '10.0.10.7', "
                       "'*.nsk.ru', '*.zdravnsk.ru', '*.ffoms.gov.ru', "
                       "'172.16.0.0/18', '192.168.0.0/18', "
                       "'172.16.10.0/24', '172.16.20.0/24', '172.16.30.0/24', '172.16.40.0/24', '172.16.50.0/24']")
@@ -146,35 +146,33 @@ def run() -> None:
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                proxy_capter1 = "[org.gnome.system.proxy]"
-                proxy_capter2 = "[org.gnome.system.proxy.http]"
-                proxy_capter3 = "[org.gnome.system.proxy.https]"
-                proxy_ignore = "ignore-hosts="
-                proxy_mode = "mode = 'manual'"
-                proxy_host = "host = '192.168.10.200'"
-                proxy_port = "port = 8080"
-                proxy_enable = "enabled = true"
-                tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override > /dev/null "
-                compile_schemas = "&& sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
-
-                cmd_create_file = ("""echo -e \"""" +
-                                   proxy_capter1 + "\n" +
-                                   proxy_ignore + nokkvd_ignore_list + "\n" +
-                                   proxy_mode + "\n\n" +
-                                   proxy_capter2 + "\n" +
-                                   proxy_host + "\n" +
-                                   proxy_port + "\n" +
-                                   proxy_enable + "\n\n" +
-                                   proxy_capter3 + "\n" +
-                                   proxy_host + "\n" +
-                                   proxy_port + """\n\n" | """ +
-                                   tee_to_file +
-                                   compile_schemas)
-
-                res11 = conn.sudo(cmd_create_file, warn=True)
-                if res11.return_code == 0:
-                    print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
-
+                # proxy_capter1 = "[org.gnome.system.proxy]"
+                # proxy_capter2 = "[org.gnome.system.proxy.http]"
+                # proxy_capter3 = "[org.gnome.system.proxy.https]"
+                # proxy_ignore = "ignore-hosts="
+                # proxy_mode = "mode = 'manual'"
+                # proxy_host = "host = '192.168.10.200'"
+                # proxy_port = "port = 8080"
+                # proxy_enable = "enabled = true"
+                # tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override > /dev/null "
+                # compile_schemas = "&& sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
+                #
+                # cmd_create_file = ("""echo -e \"""" +
+                #                    proxy_capter1 + "\n" +
+                #                    proxy_ignore + nokkvd_ignore_list + "\n" +
+                #                    proxy_mode + "\n\n" +
+                #                    proxy_capter2 + "\n" +
+                #                    proxy_host + "\n" +
+                #                    proxy_port + "\n" +
+                #                    proxy_enable + "\n\n" +
+                #                    proxy_capter3 + "\n" +
+                #                    proxy_host + "\n" +
+                #                    proxy_port + """\n\n" | """ +
+                #                    tee_to_file +
+                #                    compile_schemas)
+                # res11 = conn.sudo(cmd_create_file, warn=True)
+                # if res11.return_code == 0:
+                #     print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
                 # 12 -----------------------
                 # ...
 
