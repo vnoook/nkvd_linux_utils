@@ -57,16 +57,13 @@ def get_folders_from_host(host_name) -> tuple:
         errors = stderr.read().decode("utf-8").strip()
 
         if errors:
-            # return host_name, f"Ошибка на {host_name}: {errors}"
             return host_name, ""
 
         # Фильтруем пустые строки, если папок нет
         folders = [f for f in folders if f]
-        # return host_name, folders if folders else ["Папки не найдены или директория пуста"]
         return host_name, folders if folders else ""
 
     except Exception as e:
-        # return host_name, f"{host_name},Не удалось подключиться к {host_name}: {str(e)}"
         return host_name, ""
     finally:
         client.close()
@@ -122,7 +119,6 @@ def get_ignorehosts_host_user(host_name, user, passwrd) -> str:
         return str(ignore_hosts[0]) if not isinstance(ignore_hosts[0], str) else ignore_hosts[0]
 
     except Exception as e:
-        # return f"Не удалось подключиться к {host_name}: {str(e)}"
         return f"Не удалось подключиться: {str(e)}"
     finally:
         client.close()
@@ -135,7 +131,7 @@ def main():
 
     print("\033[1;32m" + "Начинаю сбор данных с компьютеров ..." + "\033[0m")
     # Запуск опроса в несколько потоков для скорости
-    with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
         results = executor.map(get_folders_from_host, comp_list)
     print("\033[1;32m" + "Сбор данных закончен, начинаю обработку ..." + "\033[0m")
 
@@ -146,16 +142,16 @@ def main():
                 if user_name in users_dict.keys():
                     user_pass = users_dict[user_name]
 
-                    cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
-
-                    if cur_getignore != cs2.nokkvd_ignore_list:
-                        print(host + "," + user_name + "," + cur_getignore)
-                        reset_ignorehosts_host_user(host, user_name, user_pass)
-                        cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
-                        print(host + "," + user_name + "," + cur_getignore)
-                        print()
-                else:
-                    print("\033[1;31m" + f"{user_name} отсутствует в списке юзеров" + "\033[0m")
+                    # cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
+    #
+    #                 if cur_getignore != cs2.nokkvd_ignore_list:
+    #                     print(host + "," + user_name + "," + cur_getignore)
+    #                     reset_ignorehosts_host_user(host, user_name, user_pass)
+    #                     cur_getignore = get_ignorehosts_host_user(host, user_name, user_pass)
+    #                     print(host + "," + user_name + "," + cur_getignore)
+    #                     print()
+    #             else:
+    #                 print("\033[1;31m" + f"{user_name} отсутствует в списке юзеров" + "\033[0m")
 
 
 if __name__ == "__main__":
