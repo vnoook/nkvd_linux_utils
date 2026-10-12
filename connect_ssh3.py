@@ -71,6 +71,7 @@ def get_folders_from_host(host_name) -> tuple:
     finally:
         client.close()
 
+
 # функция сброса параметра ignore-host у конкретного пользователя на конкретном host
 def reset_ignorehosts_host_user(host_name, user, passwrd) -> str:
     client = paramiko.SSHClient()

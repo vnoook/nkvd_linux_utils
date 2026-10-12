@@ -70,10 +70,10 @@ def decode_output(in_result) -> str:
 
 
 # функция чтения файла и получения из него списка имён компов
-def read_file_csv(file_csv) -> list:
+def read_file_csv(file_csv_name) -> list:
     comp_name_list = []
     # чтение файла с адресами компов
-    with open(file_csv, encoding='cp1251', newline='') as csvfile:
+    with open(file_csv_name, encoding='cp1251', newline='') as csvfile:
         row_csv_content = csv.reader(csvfile, delimiter=',')
         next(row_csv_content)  # пропускаю первую строку
         for row in row_csv_content:
@@ -101,7 +101,7 @@ def run() -> None:
 
     # цикл подключения ко всем компам из списка в файле
     for comp in comp_list:
-        print(comp+',', get_host_ip(comp), end=', ')
+        print(comp + ',', get_host_ip(comp), end=', ')
 
         if check_host_accessibility(comp):
             conn = fabric.Connection(host=comp, user=lu_conf.user,
@@ -139,7 +139,7 @@ def run() -> None:
                 # print(decode_output(res10))
                 # 8
                 # res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
-                #                 warn=True, hide=True)
+                #                  warn=True, hide=True)
                 # print(decode_output(res7))
                 # 9
                 # conn.run('/etc/NX/nxnode --version')
@@ -188,7 +188,7 @@ def run() -> None:
             else:
                 comp_dict[comp] = del_simbols(error_msg)
         print()
-        print('*'*50)
+        print('*' * 50)
 
     for key, value in comp_dict.items():
         print(f'{key},{value}')
