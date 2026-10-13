@@ -46,6 +46,10 @@ def updater(comp: str) -> bool:
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             conn.sudo('uname -r')
+            # conn.sudo('apt-get update')
+            # conn.sudo('apt-get dist-upgrade -y')
+            # conn.sudo('update-kernel -y')
+            # conn.sudo('remove-old-kernels -y')
         except Exception as _err:
             print('--- пароли не подходят --- ', _err)
         conn.close()
