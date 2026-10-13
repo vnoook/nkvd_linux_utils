@@ -1,7 +1,12 @@
 import csv
+import fabric
 import socket
+import concurrent.futures
+import lu_conf  # файл с доступами
+
 
 file_csv = 'res/hosts.csv'
+
 
 # функция чтения файла и получения из него списка имён компов
 def read_file_csv(file_csv_name) -> list:
@@ -15,10 +20,51 @@ def read_file_csv(file_csv_name) -> list:
     return comp_name_list
 
 
+# функция для проверки компа в сети и доступности на нём порта 22
+def check_host_accessibility(host: str) -> bool:
+    socket.setdefaulttimeout(1)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.connect((host, 22))
+    except TimeoutError as _err1:
+        return False
+    except Exception as _err2:
+        return False
+    else:
+        return True
+    finally:
+        sock.close()
+
+
+def updater(comp: str) -> bool:
+    if check_host_accessibility(comp):
+        # общий конфиг для всех соединений
+        utf8en_env = {'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'}
+        config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8en_env},
+                                          'run': {'env': utf8en_env}})
+        conn = fabric.Connection(host=comp, user=lu_conf.user,
+                                 connect_kwargs={"password": lu_conf.secret}, config=config)
+        try:
+            conn.sudo('uname -r')
+        except Exception as _err:
+            print('--- пароли не подходят --- ', _err)
+        conn.close()
+    return True
+
+
 def run() -> None:
-    # чтение файла
+    # чтение файла с компами
     comp_list = read_file_csv(file_csv)
-    print(comp_list)
+
+    print("\033[1;32m" + "Начинаю сбор данных с компьютеров ..." + "\033[0m")
+    # Запуск опроса в несколько потоков для скорости
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+        results = executor.map(updater, comp_list)
+    print("\033[1;32m" + "Сбор данных закончен ..." + "\033[0m")
+
+    # for res in results:
+    #     print(f'{res = }')
+
 
 if __name__ == '__main__':
     run()
