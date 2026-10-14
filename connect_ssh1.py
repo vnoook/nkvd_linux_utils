@@ -45,13 +45,13 @@ def updater(comp: str) -> bool:
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
-            conn.sudo('uname -r')
-            # conn.sudo('apt-get update')
-            # conn.sudo('apt-get dist-upgrade -y')
-            # conn.sudo('update-kernel -y')
-            # conn.sudo('remove-old-kernels -y')
+            conn.sudo('uname -r', hide=True)
+            # conn.sudo('apt-get update', hide=True)
+            # conn.sudo('apt-get dist-upgrade -y', hide=True)
+            # conn.sudo('update-kernel -y', hide=True)
+            # conn.sudo('remove-old-kernels -y', hide=True)
         except Exception as _err:
-            print('--- пароли не подходят --- ', _err)
+            print(f'--- на компьютере {comp} ошибка {_err} ---')
         conn.close()
     return True
 
