@@ -1,3 +1,4 @@
+import re
 import csv
 import fabric
 import socket
@@ -6,6 +7,20 @@ import lu_conf  # файл с доступами
 
 
 file_csv = 'res/hosts.csv'
+
+
+# функция для получения ip-адреса по имени компа
+def get_host_ip(host: str) -> str:
+    try:
+        host_ip = socket.gethostbyname(host)
+    except Exception as _err3:
+        host_ip = str(_err3)
+    return host_ip
+
+
+# функция удаления непечатаемых символов
+def del_simbols(str_in: str) -> str:
+    return re.sub('[\t\r\n]', '', str_in)
 
 
 # функция чтения файла и получения из него списка имён компов
@@ -45,7 +60,10 @@ def updater(comp: str) -> bool:
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
-            conn.sudo('uname -r', hide=True)
+            rez = conn.sudo('uname -r')
+            comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(rez.stdout)))
+
+            # rez = conn.sudo('uname -r', hide=True)
             # conn.sudo('apt-get update', hide=True)
             # conn.sudo('apt-get dist-upgrade -y', hide=True)
             # conn.sudo('update-kernel -y', hide=True)
@@ -64,11 +82,18 @@ def run() -> None:
     # Запуск опроса в несколько потоков для скорости
     with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
         results = executor.map(updater, comp_list)
-    print("\033[1;32m" + "Сбор данных закончен ..." + "\033[0m")
+    print("\033[1;32m" + "Обработка данных закончена ..." + "\033[0m")
+
+    for key, value in comp_dict.items():
+        print(f'{key},{value}')
 
     # for res in results:
     #     print(f'{res = }')
 
 
 if __name__ == '__main__':
+    # переменные
+    comp_dict = {}
+
+
     run()
