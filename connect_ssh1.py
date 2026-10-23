@@ -49,15 +49,11 @@ def run() -> None:
         results = executor.map(updater, comp_list)
     print("\033[1;32m" + "Обработка данных закончена ..." + "\033[0m")
 
-    # for key, value in comp_dict.items():
-    #     print(f'{key},{value}')
-
-    # for res in results:
-    #     print(f'{res = }')
+    for key, value in comp_dict.items():
+        print(f'{key},{value}')
 
 
 if __name__ == '__main__':
     # переменные
     comp_dict = {}
-
     run()
