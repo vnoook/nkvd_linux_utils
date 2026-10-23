@@ -126,7 +126,7 @@ def run() -> None:
         else:
             error_msg = '--- не в сети или нет доступа по SSH ---'
             print(error_msg)
-            if is_ip_address(linux_utils.get_host_ip(comp)):
+            if linux_utils.is_ip_address(linux_utils.get_host_ip(comp)):
                 comp_dict[comp] = ','.join((str(linux_utils.get_host_ip(comp)), linux_utils.del_simbols(error_msg)))
             else:
                 comp_dict[comp] = linux_utils.del_simbols(error_msg)
