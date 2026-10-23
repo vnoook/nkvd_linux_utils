@@ -3,6 +3,7 @@ import paramiko
 import csv
 import lu_conf  # файл с доступами
 import connect_ssh2 as cs2
+import linux_utils
 
 # Настройки подключения
 SSH_USER = lu_conf.user
@@ -22,18 +23,6 @@ def read_users_csv(users_file) -> dict:
         for row in row_csv_content:
             users_dict[row[0]] = row[1]
     return users_dict
-
-
-# функция чтения файла и получения из него списка имён компов
-def read_file_csv(file) -> list:
-    comp_name_list = []
-    # чтение файла с адресами компов
-    with open(file, encoding='cp1251', newline='') as csvfile:
-        row_csv_content = csv.reader(csvfile, delimiter=',')
-        next(row_csv_content)  # пропускаю первую строку
-        for row in row_csv_content:
-            comp_name_list.append(row[0])
-    return comp_name_list
 
 
 # функция получения содержимого папки с пользователями на компе host
@@ -129,7 +118,7 @@ def get_ignorehosts_host_user(host_name, user, passwrd) -> str:
 
 
 def main():
-    comp_list = read_file_csv(file_csv)
+    comp_list = linux_utils.read_file_csv(file_csv)
     users_dict = read_users_csv(users_csv)
     # comp_dict = {}
 
@@ -160,6 +149,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# gsettings reset org.gnome.system.proxy ignore-hosts
-# gsettings get org.gnome.system.proxy ignore-hosts

@@ -2,17 +2,7 @@ import re
 import csv
 import fabric
 import socket
-import concurrent.futures
-import lu_conf  # файл с доступами
-
-
-# функция для получения ip-адреса по имени компа
-def get_host_ip(host: str) -> str:
-    try:
-        host_ip = socket.gethostbyname(host)
-    except Exception as _err3:
-        host_ip = str(_err3)
-    return host_ip
+import ipaddress
 
 
 # функция удаления непечатаемых символов
@@ -46,3 +36,29 @@ def check_host_accessibility(host: str) -> bool:
         return True
     finally:
         sock.close()
+
+
+# декодирование нечитаемой информации из выводов в читаемую
+def decode_output(in_result) -> str:
+    out_result = in_result.stdout.encode('cp1251').decode('utf-8')
+    # print(correct_output)
+    return out_result
+
+
+# функция для получения ip-адреса по имени компа
+def get_host_ip(host: str) -> str:
+    try:
+        host_ip = socket.gethostbyname(host)
+    except Exception as _err3:
+        host_ip = str(_err3)
+    return host_ip
+
+
+# функция определения ip адрес это или нет
+def is_ip_address(str_in: str) -> bool:
+    try:
+        ipaddress.ip_address(str_in)
+        return True
+    except ValueError:
+        return False
+

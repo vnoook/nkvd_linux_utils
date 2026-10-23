@@ -4,6 +4,7 @@ import fabric
 import socket
 import ipaddress
 import lu_conf  # файл с доступами
+import linux_utils
 
 file_csv = 'res/hosts.csv'
 default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
@@ -23,71 +24,13 @@ nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', "
                       "'172.16.10.0/24', '172.16.20.0/24', '172.16.30.0/24', '172.16.40.0/24', '172.16.50.0/24']")
 
 
-# функция для проверки компа в сети и доступности на нём порта 22
-def check_host_accessibility(host: str) -> bool:
-    socket.setdefaulttimeout(1)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        sock.connect((host, 22))
-    except TimeoutError as _err1:
-        return False
-    except Exception as _err2:
-        return False
-    else:
-        return True
-    finally:
-        sock.close()
-
-
-# функция для получения ip-адреса по имени компа
-def get_host_ip(host: str) -> str:
-    try:
-        host_ip = socket.gethostbyname(host)
-    except Exception as _err3:
-        host_ip = str(_err3)
-    return host_ip
-
-
-# функция определения ip адрес это или нет
-def is_ip_address(str_in: str) -> bool:
-    try:
-        ipaddress.ip_address(str_in)
-        return True
-    except ValueError:
-        return False
-
-
-# функция удаления непечатаемых символов
-def del_simbols(str_in: str) -> str:
-    return re.sub('[\t\r\n]', '', str_in)
-
-
-# декодирование нечитаемой информации из выводов в читаемую
-def decode_output(in_result) -> str:
-    out_result = in_result.stdout.encode('cp1251').decode('utf-8')
-    # print(correct_output)
-    return out_result
-
-
-# функция чтения файла и получения из него списка имён компов
-def read_file_csv(file_csv_name) -> list:
-    comp_name_list = []
-    # чтение файла с адресами компов
-    with open(file_csv_name, encoding='cp1251', newline='') as csvfile:
-        row_csv_content = csv.reader(csvfile, delimiter=',')
-        next(row_csv_content)  # пропускаю первую строку
-        for row in row_csv_content:
-            comp_name_list.append(row[0])
-    return comp_name_list
-
-
 # основная функция запуска приложения
 def run() -> None:
     # переменные
     comp_dict = {}
 
     # чтение файла
-    comp_list = read_file_csv(file_csv)
+    comp_list = linux_utils.read_file_csv(file_csv)
 
     # общий конфиг для всех соединений
     # config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
@@ -101,92 +44,92 @@ def run() -> None:
 
     # цикл подключения ко всем компам из списка в файле
     for comp in comp_list:
-        print(comp + ',', get_host_ip(comp), end=', ')
+        print(comp + ',', linux_utils.get_host_ip(comp), end=', ')
 
-        if check_host_accessibility(comp):
+        if linux_utils.check_host_accessibility(comp):
             conn = fabric.Connection(host=comp, user=lu_conf.user,
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
                 rez = conn.sudo('uname -r')
-                comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(rez.stdout)))
+                comp_dict[comp] = ','.join((linux_utils.get_host_ip(comp), linux_utils.del_simbols(rez.stdout)))
                 # 2
-                # conn.sudo('apt-get update')
-                # conn.sudo('apt-get dist-upgrade -y')
+                conn.sudo('apt-get update')
+                conn.sudo('apt-get dist-upgrade -y')
                 # 3
-                # conn.sudo('update-kernel -y')
+                conn.sudo('update-kernel -y')
                 # 4
-                # conn.sudo('remove-old-kernels -y')
+                conn.sudo('remove-old-kernels -y')
                 # 5
-                # res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
-                # if res5_search_cryptopro.return_code == 0:
-                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
-                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites"'
-                #               r' -delparam')
-                #     conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
-                #               r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"'
-                #               r' "https://*.cryptopro.ru" "http://*.cryptopro.ru" "http://*.cadescompany.ru"'
-                #               r' "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
-                #               r' "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
-                #               r' "http://10.101.39.10" "https://10.101.39.10"')
+                res5_search_cryptopro = conn.sudo(r'rpm -qa | grep lsb-cprocsp-base', warn=True, hide=True)
+                if res5_search_cryptopro.return_code == 0:
+                    conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                              r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"')
+                    conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites\TrustedSites"'
+                              r' -delparam')
+                    conn.sudo(r'/opt/cprocsp/sbin/amd64/cpconfig -ini "\config\cades\TrustedSites" -add multistring'
+                              r' "TrustedSites" "https://*.egisznso.ru" "http://*.egisznso.ru"'
+                              r' "https://*.cryptopro.ru" "http://*.cryptopro.ru" "http://*.cadescompany.ru"'
+                              r' "http://dlo-app.egisznso.ru" "https://dlo-app.egisznso.ru"'
+                              r' "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
+                              r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6
-                # res8 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)',
-                #                 warn=True, hide=True)
-                # print(decode_output(res8))
+                res8 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)',
+                                warn=True, hide=True)
+                print(linux_utils.decode_output(res8))
                 # 7
-                # res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
-                # print(decode_output(res10))
+                res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
+                print(linux_utils.decode_output(res10))
                 # 8
-                # res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
-                #                  warn=True, hide=True)
-                # print(decode_output(res7))
+                res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
+                                 warn=True, hide=True)
+                print(linux_utils.decode_output(res7))
                 # 9
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
                 # conn.run('lsusb')
                 # 11 -----------------------
-                # proxy_capter1 = "[org.gnome.system.proxy]"
-                # proxy_capter2 = "[org.gnome.system.proxy.http]"
-                # proxy_capter3 = "[org.gnome.system.proxy.https]"
-                # proxy_ignore = "ignore-hosts="
-                # proxy_mode = "mode = 'manual'"
-                # proxy_host = "host = '192.168.10.200'"
-                # proxy_port = "port = 8080"
-                # proxy_enable = "enabled = true"
-                # tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override > /dev/null "
-                # compile_schemas = "&& sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
-                #
-                # cmd_create_file = ("""echo -e \"""" +
-                #                    proxy_capter1 + "\n" +
-                #                    proxy_ignore + nokkvd_ignore_list + "\n" +
-                #                    proxy_mode + "\n\n" +
-                #                    proxy_capter2 + "\n" +
-                #                    proxy_host + "\n" +
-                #                    proxy_port + "\n" +
-                #                    proxy_enable + "\n\n" +
-                #                    proxy_capter3 + "\n" +
-                #                    proxy_host + "\n" +
-                #                    proxy_port + """\n\n" | """ +
-                #                    tee_to_file +
-                #                    compile_schemas)
-                # res11 = conn.sudo(cmd_create_file, warn=True)
-                # if res11.return_code == 0:
-                #     print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
+                proxy_capter1 = "[org.gnome.system.proxy]"
+                proxy_capter2 = "[org.gnome.system.proxy.http]"
+                proxy_capter3 = "[org.gnome.system.proxy.https]"
+                proxy_ignore = "ignore-hosts="
+                proxy_mode = "mode = 'manual'"
+                proxy_host = "host = '192.168.10.200'"
+                proxy_port = "port = 8080"
+                proxy_enable = "enabled = true"
+                tee_to_file = "sudo tee /usr/share/glib-2.0/schemas/99_global_proxy.gschema.override > /dev/null "
+                compile_schemas = "&& sudo glib-compile-schemas /usr/share/glib-2.0/schemas/"
+
+                cmd_create_file = ("""echo -e \"""" +
+                                   proxy_capter1 + "\n" +
+                                   proxy_ignore + nokkvd_ignore_list + "\n" +
+                                   proxy_mode + "\n\n" +
+                                   proxy_capter2 + "\n" +
+                                   proxy_host + "\n" +
+                                   proxy_port + "\n" +
+                                   proxy_enable + "\n\n" +
+                                   proxy_capter3 + "\n" +
+                                   proxy_host + "\n" +
+                                   proxy_port + """\n\n" | """ +
+                                   tee_to_file +
+                                   compile_schemas)
+                res11 = conn.sudo(cmd_create_file, warn=True)
+                if res11.return_code == 0:
+                    print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
                 # 12 -----------------------
                 # ...
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
-                comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(str(_err))))
+                comp_dict[comp] = ','.join((linux_utils.get_host_ip(comp), linux_utils.del_simbols(str(_err))))
             conn.close()
         else:
             error_msg = '--- не в сети или нет доступа по SSH ---'
             print(error_msg)
-            if is_ip_address(get_host_ip(comp)):
-                comp_dict[comp] = ','.join((str(get_host_ip(comp)), del_simbols(error_msg)))
+            if is_ip_address(linux_utils.get_host_ip(comp)):
+                comp_dict[comp] = ','.join((str(linux_utils.get_host_ip(comp)), linux_utils.del_simbols(error_msg)))
             else:
-                comp_dict[comp] = del_simbols(error_msg)
+                comp_dict[comp] = linux_utils.del_simbols(error_msg)
         print()
         print('*' * 50)
 
