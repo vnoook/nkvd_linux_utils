@@ -1,7 +1,5 @@
-import re
-import csv
 import fabric
-import socket
+# import socket
 import concurrent.futures
 import lu_conf  # файл с доступами
 import linux_utils

@@ -1,6 +1,5 @@
 import re
 import csv
-import fabric
 import socket
 import ipaddress
 
@@ -61,4 +60,3 @@ def is_ip_address(str_in: str) -> bool:
         return True
     except ValueError:
         return False
-
