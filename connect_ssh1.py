@@ -52,7 +52,11 @@ def check_host_accessibility(host: str) -> bool:
 
 
 def updater(comp: str) -> bool:
-    if check_host_accessibility(comp):
+    host_accessibility =  check_host_accessibility(comp)
+    comp_dict[comp] = ','.join((get_host_ip(comp), ''))
+    # comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(rez.stdout)))
+
+    if host_access:
         # общий конфиг для всех соединений
         utf8en_env = {'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'}
         config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8en_env},
@@ -61,7 +65,9 @@ def updater(comp: str) -> bool:
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
             rez = conn.sudo('uname -r')
-            comp_dict[comp] = ','.join((get_host_ip(comp), del_simbols(rez.stdout)))
+            print(rez)
+            print(rez.stdout)
+            print(rez.stderr)
 
             # rez = conn.sudo('uname -r', hide=True)
             # conn.sudo('apt-get update', hide=True)
@@ -84,8 +90,8 @@ def run() -> None:
         results = executor.map(updater, comp_list)
     print("\033[1;32m" + "Обработка данных закончена ..." + "\033[0m")
 
-    for key, value in comp_dict.items():
-        print(f'{key},{value}')
+    # for key, value in comp_dict.items():
+    #     print(f'{key},{value}')
 
     # for res in results:
     #     print(f'{res = }')
@@ -94,6 +100,5 @@ def run() -> None:
 if __name__ == '__main__':
     # переменные
     comp_dict = {}
-
 
     run()
