@@ -120,16 +120,13 @@ def run() -> None:
                 res12_1 = conn.sudo('mv /home/user /home/user1', warn=True)
                 if res12_1.failed:
                     print(res12_1.stderr)
-                else:
-                    print(res12_1.stdout)
-
                 res12_2 = conn.sudo('userdel user', warn=True)
                 if res12_2.failed:
                     print(res12_2.stderr)
-                else:
-                    print(res12_2.stdout)
                 # res12_3 = conn.sudo('userdel -r user', warn=True)
                 # res12_4 = conn.sudo('rm -rf /home/user1', warn=True)
+                # mv /home/user1 /home/user
+                # chown -R user:user /home/user
                 # 13 -----------------------
                 # ...
 
