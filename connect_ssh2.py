@@ -88,7 +88,7 @@ def run() -> None:
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
                 # conn.run('lsusb')
-                # 11 -----------------------
+                # 11
                 # proxy_capter1 = "[org.gnome.system.proxy]"
                 # proxy_capter2 = "[org.gnome.system.proxy.http]"
                 # proxy_capter3 = "[org.gnome.system.proxy.https]"
@@ -117,6 +117,11 @@ def run() -> None:
                 # if res11.return_code == 0:
                 #     print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
                 # 12 -----------------------
+                # res12_1 = conn.sudo('mv /home/user /home/user1', warn=True)
+                # res12_2 = conn.sudo('userdel user', warn=True)
+                # res12_3 = conn.sudo('userdel -r user', warn=True)
+                # res12_4 = conn.sudo('rm -rf /home/user1', warn=True)
+                # res12_5 = conn.sudo('cp -r /home/user /home/user1', warn=True)
                 # ...
 
             except Exception as _err:
