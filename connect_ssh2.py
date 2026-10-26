@@ -51,8 +51,8 @@ def run() -> None:
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
-                rez = conn.sudo('uname -r')
-                comp_dict[comp] = ','.join((linux_utils.get_host_ip(comp), linux_utils.del_simbols(rez.stdout)))
+                rez1 = conn.sudo('uname -r')
+                comp_dict[comp] = ','.join((linux_utils.get_host_ip(comp), linux_utils.del_simbols(rez1.stdout)))
                 # 2
                 # conn.sudo('apt-get update')
                 # conn.sudo('apt-get dist-upgrade -y')
@@ -117,11 +117,20 @@ def run() -> None:
                 # if res11.return_code == 0:
                 #     print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
                 # 12 -----------------------
-                # res12_1 = conn.sudo('mv /home/user /home/user1', warn=True)
-                # res12_2 = conn.sudo('userdel user', warn=True)
+                res12_1 = conn.sudo('mv /home/user /home/user1', warn=True)
+                if res12_1.failed:
+                    print(res12_1.stderr)
+                else:
+                    print(res12_1.stdout)
+
+                res12_2 = conn.sudo('userdel user', warn=True)
+                if res12_2.failed:
+                    print(res12_2.stderr)
+                else:
+                    print(res12_2.stdout)
                 # res12_3 = conn.sudo('userdel -r user', warn=True)
                 # res12_4 = conn.sudo('rm -rf /home/user1', warn=True)
-                # res12_5 = conn.sudo('cp -r /home/user /home/user1', warn=True)
+                # 13 -----------------------
                 # ...
 
             except Exception as _err:
