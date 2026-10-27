@@ -113,6 +113,7 @@ def run() -> None:
                 res12_2 = conn.sudo('userdel user', warn=True)
                 if res12_2.failed:
                     print(res12_2.stderr)
+
                 # userdel -r user
                 # rm -rf /home/user1
                 # mv /home/user1 /home/user
