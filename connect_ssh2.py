@@ -1,15 +1,9 @@
-# import re
-# import csv
 import fabric
-# import socket
-# import ipaddress
 import lu_conf  # файл с доступами
-import linux_utils
+import linux_utils as lus
 
 file_csv = 'res/hosts.csv'
 default_ignore_list = "['localhost', '127.0.0.0/8', '::1']"
-# nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', 'portal', '*.egisznso.ru', '10.101.39.10', "
-#                       "'*.gov.ru', '*.arm.loc', '*.nokvd.local', '*.zdravnsk.ru']")
 nokkvd_ignore_list = ("['localhost', '127.0.0.0/8', '::1', "
                       # "'', '', '', '', '', '', '', '', "
                       "'sedd.nso.ru', 'fman.nso.ru', 'apmon.nso.ru', 'cm.nso.ru', "
@@ -30,29 +24,25 @@ def run() -> None:
     comp_dict = {}
 
     # чтение файла
-    comp_list = linux_utils.read_file_csv(file_csv)
+    comp_list = lus.read_file_csv(file_csv)
 
     # общий конфиг для всех соединений
-    # config = fabric.Config(overrides={"sudo": {"password": lu_conf.secret}})
     utf8en_env = {'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8'}
     config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8en_env},
                                       'run': {'env': utf8en_env}})
-    # ***utf8ru_env = {'LANG': 'ru_RU.UTF-8', 'LC_ALL': 'ru_RU.UTF-8'}
-    # ***config = fabric.Config(overrides={'sudo': {'password': lu_conf.secret, 'env': utf8ru_env},
-    #                                   'run': {'env': utf8ru_env}})
     print('*' * 50)
 
     # цикл подключения ко всем компам из списка в файле
     for comp in comp_list:
-        print(comp + ',', linux_utils.get_host_ip(comp), end=', ')
+        print(comp + ',', lus.get_host_ip(comp), end=', ')
 
-        if linux_utils.check_host_accessibility(comp):
+        if lus.check_host_accessibility(comp):
             conn = fabric.Connection(host=comp, user=lu_conf.user,
                                      connect_kwargs={"password": lu_conf.secret}, config=config)
             try:
                 # 1
                 rez1 = conn.sudo('uname -r')
-                comp_dict[comp] = ','.join((linux_utils.get_host_ip(comp), linux_utils.del_simbols(rez1.stdout)))
+                comp_dict[comp] = ','.join((lus.get_host_ip(comp), lus.del_simbols(rez1.stdout)))
                 # 2
                 # conn.sudo('apt-get update')
                 # conn.sudo('apt-get dist-upgrade -y')
@@ -76,14 +66,14 @@ def run() -> None:
                 # 6
                 # res8 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)',
                 #                 warn=True, hide=True)
-                # print(linux_utils.decode_output(res8))
+                # print(lus.decode_output(res8))
                 # 7
                 # res10 = conn.sudo('puppet agent -t', warn=True, hide=True)
-                # print(linux_utils.decode_output(res10))
+                # print(lus.decode_output(res10))
                 # 8
                 # res7 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
                 #                  warn=True, hide=True)
-                # print(linux_utils.decode_output(res7))
+                # print(lus.decode_output(res7))
                 # 9
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
@@ -123,8 +113,8 @@ def run() -> None:
                 res12_2 = conn.sudo('userdel user', warn=True)
                 if res12_2.failed:
                     print(res12_2.stderr)
-                # res12_3 = conn.sudo('userdel -r user', warn=True)
-                # res12_4 = conn.sudo('rm -rf /home/user1', warn=True)
+                # userdel -r user
+                # rm -rf /home/user1
                 # mv /home/user1 /home/user
                 # chown -R user:user /home/user
                 # 13 -----------------------
@@ -132,15 +122,15 @@ def run() -> None:
 
             except Exception as _err:
                 print('--- пароли не подходят --- ', _err)
-                comp_dict[comp] = ','.join((linux_utils.get_host_ip(comp), linux_utils.del_simbols(str(_err))))
+                comp_dict[comp] = ','.join((lus.get_host_ip(comp), lus.del_simbols(str(_err))))
             conn.close()
         else:
             error_msg = '--- не в сети или нет доступа по SSH ---'
             print(error_msg)
-            if linux_utils.is_ip_address(linux_utils.get_host_ip(comp)):
-                comp_dict[comp] = ','.join((str(linux_utils.get_host_ip(comp)), linux_utils.del_simbols(error_msg)))
+            if lus.is_ip_address(lus.get_host_ip(comp)):
+                comp_dict[comp] = ','.join((str(lus.get_host_ip(comp)), lus.del_simbols(error_msg)))
             else:
-                comp_dict[comp] = linux_utils.del_simbols(error_msg)
+                comp_dict[comp] = lus.del_simbols(error_msg)
         print()
         print('*' * 50)
 
