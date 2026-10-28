@@ -107,12 +107,12 @@ def run() -> None:
                 # if res11.return_code == 0:
                 #     print("\033[1;32m" + "создан файл с изменениями настроек прокси" + "\033[0m")
                 # 12 -----------------------
-                res12_1 = conn.sudo('mv /home/user /home/user1', warn=True)
-                if res12_1.failed:
-                    print(res12_1.stderr)
-                res12_2 = conn.sudo('userdel user', warn=True)
-                if res12_2.failed:
-                    print(res12_2.stderr)
+                # res12_1 = conn.sudo('mv /home/user /home/user1', warn=True)
+                # if res12_1.failed:
+                #     print(res12_1.stderr)
+                # res12_2 = conn.sudo('userdel user', warn=True)
+                # if res12_2.failed:
+                #     print(res12_2.stderr)
 
                 # userdel -r user
                 # rm -rf /home/user1
