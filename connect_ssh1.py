@@ -1,17 +1,19 @@
 import fabric
 import concurrent.futures
-import lu_conf  # файл с доступами
+
 import linux_utils
+import lu_conf  # файл с доступами
+import linux_utils as lus
 
 
 file_csv = 'res/hosts.csv'
 
 
 def updater(comp: str) -> bool:
-    host_online =  linux_utils.check_host_accessibility(comp)
-    host_ip = linux_utils.get_host_ip(comp)
+    host_online =  lus.check_host_accessibility(comp)
+    host_ip = lus.get_host_ip(comp)
     comp_dict[comp] = ','.join((host_ip, ''))
-    print(comp_dict)
+    # print(comp_dict)
 
     if host_online:
         # общий конфиг для всех соединений
@@ -21,10 +23,15 @@ def updater(comp: str) -> bool:
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
-            rez = conn.sudo('uname -r', hide=True)
-            # print(f'{(rez) = }')
-            print(f'{(linux_utils.del_simbols(rez.stdout)) = }')
-            print(f'{(linux_utils.del_simbols(rez.stderr)) = }')
+            rez = conn.sudo(r"awk -F: '$3 >= 500 {print $1}' /etc/passwd", hide=True)
+            rez_out = rez.stdout.splitlines()
+            if rez_out != ['master']:
+                print(comp + ',' + lus.get_host_ip(comp) + ',' + str(rez_out))
+
+            # rez = conn.sudo('uname -r', hide=True)
+            # # print(f'{(rez) = }')
+            # print(f'{(lus.del_simbols(rez.stdout)) = }')
+            # print(f'{(lus.del_simbols(rez.stderr)) = }')
 
             # rez = conn.sudo('uname -r', hide=True)
             # conn.sudo('apt-get update', hide=True)
@@ -39,7 +46,7 @@ def updater(comp: str) -> bool:
 
 def run() -> None:
     # чтение файла с компами
-    comp_list = linux_utils.read_file_csv(file_csv)
+    comp_list = lus.read_file_csv(file_csv)
 
     print("\033[1;32m" + "Начинаю сбор данных с компьютеров ..." + "\033[0m")
     # Запуск опроса в несколько потоков для скорости
