@@ -64,17 +64,16 @@ def run() -> None:
                 #               r' "https://lk.zakupki.gov.ru" "https://*.gov.ru"'
                 #               r' "http://10.101.39.10" "https://10.101.39.10"')
                 # 6
-                res6 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)', warn=True, hide=True)
-                print(lus.encode_output(res6))
-                # print(res6)
+                # res6 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/cprocsp-fix.sh)',
+                #                  warn=True, hide=True)
+                # print(res6.stdout)
                 # 7
-                res7 = conn.sudo('puppet agent -t', warn=True, hide=True)
-                # print(lus.encode_output(res7))
-                # print(res7)
+                # res7 = conn.sudo('puppet agent -t', warn=True, hide=True)
+                # print(res7.stdout)
                 # 8
-                res8 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)', warn=True, hide=True)
-                # print(lus.encode_output(res8))
-                # print(res8)
+                # res8 = conn.sudo(r'bash < <(curl -s http://alt-mirror.arm.loc/scripts/repair_hostname.sh)',
+                #                  warn=True, hide=True)
+                # print(res8.stdout)
                 # 9
                 # conn.run('/etc/NX/nxnode --version')
                 # 10
