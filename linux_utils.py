@@ -43,6 +43,12 @@ def decode_output(in_result) -> str:
     return out_result
 
 
+# декодирование нечитаемой информации из выводов в читаемую
+def encode_output(in_result) -> str:
+    out_result = in_result.stdout.encode('cp1251', errors='ignore')
+    return out_result
+
+
 # функция для получения ip-адреса по имени компа
 def get_host_ip(host: str) -> str:
     try:
