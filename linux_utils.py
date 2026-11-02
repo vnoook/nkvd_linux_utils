@@ -40,7 +40,6 @@ def check_host_accessibility(host: str) -> bool:
 # декодирование нечитаемой информации из выводов в читаемую
 def decode_output(in_result) -> str:
     out_result = in_result.stdout.encode('cp1251').decode('utf-8')
-    # print(correct_output)
     return out_result
 
 
