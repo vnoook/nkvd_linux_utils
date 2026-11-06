@@ -23,21 +23,21 @@ def updater(comp: str) -> bool:
         conn = fabric.Connection(host=comp, user=lu_conf.user,
                                  connect_kwargs={"password": lu_conf.secret}, config=config)
         try:
-            rez = conn.sudo(r"awk -F: '$3 >= 500 {print $1}' /etc/passwd", hide=True)
-            rez_out = rez.stdout.splitlines()
-            if rez_out != ['master']:
-                print(comp + ',' + lus.get_host_ip(comp) + ',' + str(rez_out))
+            # поиск чего-то на компах
+            # rez = conn.sudo(r"awk -F: '$3 >= 500 {print $1}' /etc/passwd", hide=True)
+            # rez_out = rez.stdout.splitlines()
+            # if rez_out != ['master']:
+            #     print(comp + ',' + lus.get_host_ip(comp) + ',' + str(rez_out))
+
+            # проверка ядра на компе
+            # rez = conn.sudo('uname -r', hide=True)
+            # print(comp + ',' + lus.get_host_ip(comp) + ',' + lus.del_simbols(rez.stdout))
 
             # rez = conn.sudo('uname -r', hide=True)
-            # # print(f'{(rez) = }')
-            # print(f'{(lus.del_simbols(rez.stdout)) = }')
-            # print(f'{(lus.del_simbols(rez.stderr)) = }')
-
-            # rez = conn.sudo('uname -r', hide=True)
-            # conn.sudo('apt-get update', hide=True)
-            # conn.sudo('apt-get dist-upgrade -y', hide=True)
-            # conn.sudo('update-kernel -y', hide=True)
-            # conn.sudo('remove-old-kernels -y', hide=True)
+            conn.sudo('apt-get update', hide=True)
+            conn.sudo('apt-get dist-upgrade -y', hide=True)
+            conn.sudo('update-kernel -y', hide=True)
+            conn.sudo('remove-old-kernels -y', hide=True)
         except Exception as _err:
             print(f'--- на компьютере {comp} ошибка {_err} ---')
         conn.close()
