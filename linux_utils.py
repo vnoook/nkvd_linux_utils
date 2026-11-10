@@ -6,6 +6,11 @@ import ipaddress
 
 # функция удаления непечатаемых символов
 def del_simbols(str_in: str) -> str:
+    return str_in.translate(str.maketrans('', '', '\t\r\n'))
+
+
+# функция удаления непечатаемых символов
+def del_simbols_re(str_in: str) -> str:
     return re.sub('[\t\r\n]', '', str_in)
 
 
