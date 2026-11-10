@@ -30,8 +30,12 @@ def updater(comp: str) -> bool:
             #     print(comp + ',' + lus.get_host_ip(comp) + ',' + str(rez_out))
 
             # проверка ядра на компе
-            rez = conn.sudo('uname -r', hide=True)
-            print(comp + ',' + lus.get_host_ip(comp) + ',' + lus.del_simbols(rez.stdout) + '\n', end='')
+            # rez = conn.sudo('uname -r', hide=True)
+            # print(comp + ',' + lus.get_host_ip(comp) + ',' + lus.del_simbols(rez.stdout) + '\n', end='')
+
+            # запуск обновления политик
+            res7 = conn.sudo('puppet agent -t', warn=True, hide=True)
+            # print(res7.stdout)
 
             # запуск массового обновления
             # conn.sudo('apt-get update', hide=True)
