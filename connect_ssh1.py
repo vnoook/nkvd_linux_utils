@@ -34,14 +34,13 @@ def updater(comp: str) -> bool:
             # print(comp + ',' + lus.get_host_ip(comp) + ',' + lus.del_simbols(rez.stdout) + '\n', end='')
 
             # запуск обновления политик
-            res7 = conn.sudo('puppet agent -t', warn=True, hide=True)
-            # print(res7.stdout)
+            conn.sudo('puppet agent -t', warn=True, hide=True)
 
             # запуск массового обновления
-            # conn.sudo('apt-get update', hide=True)
-            # conn.sudo('apt-get dist-upgrade -y', hide=True)
-            # conn.sudo('update-kernel -y', hide=True)
-            # conn.sudo('remove-old-kernels -y', hide=True)
+            conn.sudo('apt-get update', hide=True)
+            conn.sudo('apt-get dist-upgrade -y', hide=True)
+            conn.sudo('update-kernel -y', hide=True)
+            conn.sudo('remove-old-kernels -y', hide=True)
         except Exception as _err:
             print(f'--- на компьютере {comp} ошибка {_err} ---')
         conn.close()
