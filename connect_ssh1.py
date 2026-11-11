@@ -42,7 +42,8 @@ def updater(comp: str) -> bool:
             conn.sudo('update-kernel -y', hide=True)
             conn.sudo('remove-old-kernels -y', hide=True)
         except Exception as _err:
-            print(f'--- на компьютере {comp} ошибка {_err} ---')
+            # print(f'--- на компьютере {comp} ошибка {_err} ---')
+            print(f'{comp}, ошибка {_err},')
         conn.close()
     return True
 
